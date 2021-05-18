@@ -1,0 +1,1 @@
+export const ACCESS = { shoper: '店主', admin: '管理员' }

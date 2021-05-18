@@ -2,24 +2,14 @@
 	<div class="page-frame">
 		<div class="home-banner">			
 			<div class="banner-content">
-				<div class="banner-header">
-					<div class="banner-header-content row-between-center">
-						<div class="logo-frame row-start-center">
-							<VanImage src="/img/logo.png" fit="cover" width="50" height="50"/>
-							<div class="logo-slogan">海外生活圈</div>
-						</div>
-						<div class="account">
-							<span><a>登陆</a></span> / <span><a>注册</a></span>
-						</div>
-					</div>
-				</div>
+				<Header/>
 				<div class="banner-brief">
 					海外圈，海外生活不陌生
 				</div>
 				<div class="banner-body row-center-center">
 					<div class="banner-body-content row-between-center">
 						<div class="search-frame">
-							<input placeholder="搜索当地服务" />
+							<input placeholder="搜索相关服务" />
 						</div>
 						<div class="search-button">
 							搜索
@@ -31,30 +21,48 @@
 		</div>
 		<div class="home-body">
 			<div class="home-service-frame row-between-center">
-				<div :class="['service-item',active===key?'active':'']" @click="active=key" v-for="(item,key) in SERVICE_CATS" :key="key">
+				<div class="service-item" v-for="(item,key) in SERVICETYPE" :key="key" @click="$router.push(`/service/${key+1}`)">
 					<VanImage :src="item.icon" fit="cover" width="60" height="60"/>
 					<div>{{ item.name }}</div>
 				</div>
 			</div>
 			<div class="home-shops-frame">
-				<h1>推荐商家</h1>
-				<div>
-					
-				</div>
+				<ShopList :type="0"/>
 			</div>
 		</div>
 	</div>
 </template>
 <script>
-	import { Image as VanImage } from 'vant'
-	import { SERVICE_CATS } from '_config/service'
+	import Header from '_common/PC/Header'
+	import ShopList from '_common/PC/ShopList'
+	import { setToken, getToken } from '@/libs/util'
+	import { Image as VanImage, Rate, Popover } from 'vant'
+	import { SERVICETYPE, PAYMENT, DELIVERY } from '_config/shop'
 	export default {
 		name: 'Home',
-		components:{ VanImage },
+		components:{ VanImage, Rate, Popover, ShopList, Header },
+		computed:{
+			user(){
+				return this.$store.state.user
+			}
+		},
 		data(){
 			return {
-				active: 0,
-				SERVICE_CATS
+				SERVICETYPE,
+				PAYMENT,
+				DELIVERY,
+				showUserAction: false,
+			}
+		},
+		methods:{
+
+			logout(){
+
+				setToken(null)
+
+				this.showUserAction = false
+
+				this.$store.dispatch('getUser')
 			}
 		}
 	}
@@ -75,27 +83,33 @@
 			width: 100%;
 			height: 100%;
 			z-index: 1;
-			.banner-header{
-				padding: 10px 100px;
-				.banner-header-content{
-					color: #ffffff;
-					.logo-frame{
-						.logo-slogan{
-							font-size: 25px;
-							margin-left: 15px;
-						}
-					}
-					.account{
-						a{
-							cursor: pointer;
-							font-weight: bold;
-							&:hover{
-								color: $ACTIVECOLOR;
-							}
-						}
-					}
-				}
-			}
+			// .banner-header{
+			// 	padding: 10px 100px;
+			// 	.banner-header-content{
+			// 		color: #ffffff;
+			// 		.logo-frame{
+			// 			.logo-slogan{
+			// 				font-size: 25px;
+			// 				margin-left: 15px;
+			// 			}
+			// 		}
+			// 		.account{
+			// 			a{
+			// 				cursor: pointer;
+			// 				font-weight: bold;
+			// 				&:hover{
+			// 					color: $ACTIVECOLOR;
+			// 				}
+			// 			}
+			// 		}
+			// 		.user-frame{
+			// 			cursor: pointer;
+			// 			.username{
+			// 				margin-left: 10px;
+			// 			}
+			// 		}
+			// 	}
+			// }
 			.banner-brief{
 				font-size: 40px;
 				font-weight: bold;
@@ -110,7 +124,7 @@
 					.search-frame{
 						width: 600px;
 						height: 50px;
-						background: $BASECOLOR;
+						background: $BASEBACKGROUND;
 						padding: 0 20px;
 						input{
 							width: 100%;
@@ -129,12 +143,7 @@
 			}
 		}
 		.banner-mask{
-			position: absolute;
-			top: 0;
-			left: 0;
-			width: 100%;
-			height: 100%;
-			background-color: rgba(0,0,0,.5);
+			@extend .mask;
 		}
 	}
 	.home-body{
@@ -146,7 +155,7 @@
 				padding: 20px;
 				cursor: pointer;
 				font-weight: bold;
-				&.active{
+				&:hover{
 					background: #f7f7f7;
 				}
 			}
@@ -155,6 +164,16 @@
 			margin-top: 30px;
 			text-align: left;
 			min-height: 300px;
+		}
+	}
+	.user-action-frame{
+		padding: 0 20px 20px 20px;
+		.user-action-item{
+			margin-top: 20px;
+			cursor: pointer;
+			&:hover{
+				color: #fc6923;
+			}
 		}
 	}
 </style>

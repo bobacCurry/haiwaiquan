@@ -6,6 +6,8 @@ module.exports = function(error, req, res, next) {
 
 		log.write(error)
 
-		return res.status(500).send({ success: false, msg: error.message })
+		// error.message
+
+		return res.status(500).send({ success: false, message: '服务器错误，请联系管理员', error: error.message  })
 	}
 }

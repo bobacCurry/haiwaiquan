@@ -6,6 +6,8 @@ import AppMB from './AppMB.vue'
 
 import routerMode from './router'
 
+import store from './store/index'
+
 import '~/css/base.scss'
 
 Vue.config.productionTip = false
@@ -21,6 +23,8 @@ const router = routerMode(mode)
 new Vue({
 
 	router,
+
+	store,
 
 	render: h => h(App)
 

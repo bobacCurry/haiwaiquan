@@ -4,13 +4,15 @@ const Schema = mongoose.Schema
 
 const UserSchema = new Schema({
 
-	id: { type: Number, required: true, unique: true },
+	account: { type: String, required: true, unique: true },
 
-	first_name: { type: String, default:'' },
+	password: { type: String, required: true },
 
-	last_name: { type: String, default:'' },
+	name: { type: String, default:'圈友' },
 
-	username: { type: String, default:'' },
+	avatar: { type: String, default:'http://m.imeitou.com/uploads/allimg/2019031709/eoyjh4zwlxd.jpg' },
+
+	points: { type: Number, default:0 },
 
 	access: { type: Array, default:[] },
 
