@@ -10,7 +10,7 @@ const UserSchema = new Schema({
 
 	name: { type: String, default:'圈友' },
 
-	avatar: { type: String, default:'http://m.imeitou.com/uploads/allimg/2019031709/eoyjh4zwlxd.jpg' },
+	avatar: { type: String, default:'/img/avatar.png' },
 
 	points: { type: Number, default:0 },
 
