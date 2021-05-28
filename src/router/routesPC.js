@@ -31,7 +31,7 @@ const routes = [
       	}
 	},
 	{
-      	path: '/user',
+      	path: '/user/:active',
       	name: 'User',
       	component: User,
       	meta:{

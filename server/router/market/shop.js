@@ -16,6 +16,10 @@ router.post('/update_shop', jwt.decode, shop.update_shop)
 
 router.post('/get_class', jwt.decode, shop.get_class)
 
+router.post('/set_open', jwt.decode, shop.set_open)
+
+router.post('/set_running', jwt.decode, shop.set_running)
+
 router.post('/add_class', jwt.decode, shop.add_class)
 
 router.post('/del_class', jwt.decode, shop.del_class)

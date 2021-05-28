@@ -2,7 +2,7 @@ const express = require('express')
 
 const router = express.Router()
 
-const user = require('../../controller/user/index.js')
+const user = require('../../controller/account/user.js')
 
 const jwt = require('../../middleware/check_token')
 

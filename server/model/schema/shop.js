@@ -10,7 +10,7 @@ const ShopSchema = new Schema({
 	//商家标签
 	tags: { type: Array, default: [] },
 
-	name: { type: String, required: true, unique: true },
+	name: { type: String, required: true, unique: true, index: true },
 
 	logo: { type: String, required: true },
 
@@ -20,7 +20,7 @@ const ShopSchema = new Schema({
 
 	brief: { type: String, default: '' },
 	//评分
-	rate: { type: Number, default: 5 },
+	rate: { type: Number, default: 3.5 },
 	//开始营业
 	stime: { type: String, required: true },
 	//结束营业

@@ -4,7 +4,7 @@
 			<div class="wrapper">
 				<div class="info-frame" @click.stop>
 					<div class="info-title">
-						<h1>创建商铺</h1>
+						<h1>编辑商铺</h1>
 					</div>
 					<div class="input-frame">
 						<RadioGroup v-model="shop.type">
@@ -205,6 +205,8 @@
 					return Notify({ type: 'danger', message: 'Telegram不得为空' })
 				}
 
+				this.shop.minprice = this.shop.minprice?this.shop.minprice:0
+
 				try{
 
 					const { data } = await API.shop.addShop(this.shop)
@@ -214,7 +216,7 @@
 						return Notify({ type: 'danger', message: data.message })
 					}
 
-					this.$emit('close')
+					this.$emit('confirm')
 
 					return Notify({ type: 'success', message: data.message })
 				
@@ -238,6 +240,8 @@
 					return Notify({ type: 'danger', message: 'Telegram不得为空' })
 				}
 
+				this.shop.minprice = this.shop.minprice?this.shop.minprice:0
+
 				try{
 
 					const { data } = await API.shop.updateShop(this.shop)
@@ -247,7 +251,7 @@
 						return Notify({ type: 'danger', message: data.message })
 					}
 
-					this.$emit('close')
+					this.$emit('confirm')
 
 					return Notify({ type: 'success', message: data.message })
 				

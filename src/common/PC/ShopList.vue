@@ -2,7 +2,7 @@
 	<div>
 		<h1>{{ title }}</h1>
 		<div class="home-shop-list-frame row-start-center">
-			<div class="home-shop-item-frame row-between-center" v-for="(item,key) in list" :key="key" @click="$router.push(`/shop/${item._id}`)">
+			<div class="home-shop-item-frame row-between-center" v-for="(item,key) in items" :key="key" @click="$router.push(`/shop/${item._id}`)">
 				<div class="shop-logo">
 					<VanImage :src="item.logo" width="100%" height="100%" fit="cover"/>
 				</div>
@@ -23,27 +23,18 @@
 				</div>
 			</div>
 		</div>
+		<div class="get-more row-center-center" v-if="hasMore">
+			<Button round type="primary" style="width: 150px" :loading="loading" @click="$emit('search')">查看更多</Button>
+		</div>
 	</div>
 </template>
 <script>
-	import { Image as VanImage, Rate, Tag } from 'vant'
+	import { Image as VanImage, Rate, Tag, Button } from 'vant'
 	import { SERVICETYPE, PAYMENT, DELIVERY } from '_config/shop'
 	export default {
 		name: 'ShopList',
-		components:{ VanImage, Rate, Tag },
-		props:['type'],
-		data(){
-			return {
-				list:[
-					{ _id:'5fc27d6ba382fcfd076fd293', name:'老沈阳',logo:'https://image.shutterstock.com/image-vector/restaurant-logo-template-260nw-1254530365.jpg',brief:'梨泰院class',rate:5,stime:'08:00',etime:'23:00',payment:[0,1],delivery:[0,1],minprice:1500,city:'makati' },
-					{ _id:'5fc27d6ba382fcfd076fd293', name:'甜栗',logo:'https://i.pinimg.com/originals/48/78/6d/48786db88c95237f6e0b375dc991448a.png',brief:'梨泰院class',rate:2.6,stime:'08:00',etime:'23:00',payment:[0,1],delivery:[0,1],minprice:1500,city:'makati' },
-					{ _id:'5fc27d6ba382fcfd076fd293', name:'长家',logo:'https://i.pinimg.com/originals/90/a9/46/90a946e81ab666c160db11927f0e37d2.jpg',brief:'梨泰院class',rate:4,stime:'08:00',etime:'23:00',payment:[0,1],delivery:[0,1],minprice:1500,city:'makati' },
-					{ _id:'5fc27d6ba382fcfd076fd293', name:'风味',logo:'https://cdn5.vectorstock.com/i/1000x1000/39/69/restaurant-logo-or-label-emblems-for-menu-design-vector-21433969.jpg',brief:'梨泰院class',rate:5,stime:'08:00',etime:'23:00',payment:[0,1],delivery:[0,1],minprice:1500,city:'makati' },
-					{ _id:'5fc27d6ba382fcfd076fd293', name:'刘一手',logo:'https://mir-s3-cdn-cf.behance.net/project_modules/1400/a3d9c380154005.5cd97019e2a77.png',brief:'梨泰院class',rate:3.5,stime:'08:00',etime:'23:00',payment:[1],delivery:[0,1],minprice:1500,city:'makati' },
-					{ _id:'5fc27d6ba382fcfd076fd293', name:'甜栗',logo:'https://i.ytimg.com/vi/AUml2IgSFCQ/maxresdefault.jpg',brief:'梨泰院class',rate:5,stime:'08:00',etime:'23:00',payment:[0,1],delivery:[0,1],minprice:1500,city:'makati' },
-				]
-			}
-		},
+		components:{ VanImage, Rate, Tag, Button },
+		props:['type', 'items', 'loading', 'hasMore'],
 		computed:{
 			title(){
 
@@ -56,9 +47,6 @@
 
 				return title
 			}
-		},
-		mounted(){
-			
 		}
 	}
 </script>
@@ -95,5 +83,8 @@
 				}
 			}
 		}
+	}
+	.get-more{
+		margin-top: 30px;
 	}
 </style>

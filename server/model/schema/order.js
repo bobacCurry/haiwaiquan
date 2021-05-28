@@ -6,13 +6,15 @@ const OrderSchema = new Schema({
 
 	uid: { type: String, required: true },
 
-	shopid: { type: String, required: true },
+	shop: { type: Schema.Types.ObjectId, ref: 'shop' },
 
-	items: { type: Object, default: {} },
+	items: { type: Array, default: [] },
 
 	total: { type: Number, default: 0 },
 
-	uinfo: { type: Object, default: {} },
+	currency: { type: Number, default: 0 },
+
+	uinfo: { type: String, required: true },
 
 	payment: { type: Number, default: 0 },
 
@@ -20,10 +22,12 @@ const OrderSchema = new Schema({
 
 	memo: { type: String, default: '' },
 
+	comment: { type: Boolean, default: false },
+
 	status: { type: Number, default: 0 }
 },
 {
-	versionKey: false 
+	versionKey: false, timestamps: { createdAt:'created_at',updatedAt:'updated_at' }
 })
 
 module.exports = mongoose.model('order', OrderSchema,'order')

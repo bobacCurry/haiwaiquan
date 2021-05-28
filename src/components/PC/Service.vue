@@ -3,7 +3,7 @@
 		<Header/>
 		<div class="shop-list-frame">
 			<div class="zone-frame">
-				<ShopList :type="$route.params.type"/>
+				<ShopList :type="$route.params.type" :items="items" :loading="loading" :hasMore="hasMore" @search="search()"/>
 			</div>
 		</div>
 	</div>
@@ -12,12 +12,49 @@
 	import Header from '_common/PC/Header'
 	import ShopList from '_common/PC/ShopList'
 	import { Image as VanImage, Rate } from 'vant'
+	import API from '_api'
 	export default {
 		name: 'Service',
 		components:{ VanImage, Rate, Header, ShopList },
 		data(){
 			return {
-				
+				items: [],
+				loading: false,
+				hasMore: true,
+				param: {
+					page: 1,
+					rows: 40,
+					type: this.$route.params.type
+				}
+			}
+		},
+		async mounted(){
+
+			await this.search()
+		},
+		methods:{
+
+			async search(){
+
+				this.loading = true
+
+				const { data } = await API.show.getTypeShops(this.param)
+
+				if (!data.success) {
+
+					return Notify({ type: 'danger', message: data.message })
+				}
+
+				this.loading = false
+
+				if (data.data.length<this.param.rows) {
+
+					this.hasMore = false
+				}
+
+				this.param.page++
+
+				this.items.push(...data.data)
 			}
 		}
 	}

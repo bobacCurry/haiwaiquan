@@ -3,11 +3,11 @@
 		<Header/>
 		<div class="user-center-frame row-between-top">
 			<div class="center-tab">
-				<div :class="['center-tab-item',active===0?'active':'']" @click="active=0"><b>账户信息</b></div>
-				<div :class="['center-tab-item',active===1?'active':'']" @click="active=1"><b>地址管理</b></div>
-				<div :class="['center-tab-item',active===2?'active':'']" @click="active=2"><b>我的订单</b></div>
-				<div :class="['center-tab-item',active===3?'active':'']" @click="active=3"><b>关注的店</b></div>
-				<div :class="['center-tab-item',active===4?'active':'']" @click="active=4"><b>我的店铺</b></div>
+				<div :class="['center-tab-item',active===0?'active':'']" @click="$router.push('/user/0')"><b>账户信息</b></div>
+				<div :class="['center-tab-item',active===1?'active':'']" @click="$router.push('/user/1')"><b>地址管理</b></div>
+				<div :class="['center-tab-item',active===2?'active':'']" @click="$router.push('/user/2')"><b>我的订单</b></div>
+				<div :class="['center-tab-item',active===3?'active':'']" @click="$router.push('/user/3')"><b>关注的店</b></div>
+				<div :class="['center-tab-item',active===4?'active':'']" @click="$router.push('/user/4')"><b>我的店铺</b></div>
 			</div>
 			<div class="center-info">
 				<div v-if="active===0" class="center-info-item">
@@ -54,7 +54,7 @@
 					<div class="address-list-frame row-start-center">
 						<div class="address-item" v-for="(item,key) in infoList" :key="key">
 							<div class="row-between-center">
-								<div class="info-name"><b>{{ item.name }}</b></div>
+								<div class="info-name"><b>{{ item.name }}</b> <span v-if="item.default" style="font-size: 14px">(默认地址)</span></div>
 								<div>
 									<span>
 										<a @click="$store.dispatch('setAddress',{ show: true, info: item })">修改</a>
@@ -79,51 +79,19 @@
 					</div>
 				</div>
 				<div v-if="active===2" class="center-info-item">
-					
+					<UserOrder/>
 				</div>
 				<div v-if="active===3" class="center-info-item">
-					
+					<UserFollow/>
 				</div>
 				<div v-if="active===4" class="center-info-item">
-					<div class="shop-list-frame row-start-center">
-						<div class="shop-item row-between-center" v-for="(item,key) in shopList" :key="key">
-							<VanImage :src="item.logo" fit="cover" width="40%" height="100"/>
-							<div class="shop-item-info">
-								<div><b class="shop-item-name">{{ item.name }}</b><span v-if="!item.pass" style="color: red"> (审核中)</span></div>
-								<div class="info-edit">
-									是否上架：
-									<span @click="setRunning(item._id,!item.running,item.pass)">
-										<a v-if="item.running" class="on">点击下架</a>
-										<a v-else class="off">点击上架</a>
-									</span>
-								</div>
-								<div class="info-edit">
-									是否营业：
-									<span @click="setOpen(item._id,!item.open,item.pass)">
-										<a v-if="item.open" class="on">点击打烊</a>
-										<a v-else class="off">点击营业</a>
-									</span>
-								</div>
-								<div class="info-edit">
-									<a class="edit" @click="shopInfo=item;showShopEdit=true">编辑商铺</a> 
-									| 
-									<a class="edit" @click="shopId=item._id;currency=item.currency;showGoodsEdit=true">编辑商品</a></div>
-							</div>
-						</div>
-						<div class="shop-item row-center-center" @click="shopInfo=null;showShopEdit=true" v-if="shopList.length<3">
-							<Icon name="add-o" size="50"/>
-						</div>
-					</div>
-					<div class="shop-notice">
-						<p><b>每位用户最多可创建3个店铺，创建店铺后，可申请店铺信息审核，通过审核后您的店铺会上架。</b></p>
-						<br/>
-						<p><b>请确保店铺信息真实，如发现虚假信息，您的店铺将会被强制下架。</b></p>
-					</div>
+					<UserShops/>
+				</div>
+				<div v-if="active===5" class="center-info-item">
+					<ShopOrder/>
 				</div>
 			</div>
 		</div>
-		<EditShop v-if="showShopEdit" :shopInfo="shopInfo" @close="getShop();showShopEdit=false"/>
-		<EditGoods  v-if="showGoodsEdit" :shopId="shopId" :currency="currency" @close="showGoodsEdit=false"/>
 	</div>
 </template>
 <script>
@@ -131,12 +99,16 @@
 	import Upload from '_common/BASE/Upload'
 	import EditShop from '_common/PC/EditShop'
 	import EditGoods from '_common/PC/EditGoods'
-	import { Image as VanImage, Tag, Button, Field, Icon, Notify, Dialog } from 'vant'
+	import UserOrder from '_common/PC/UserOrder'
+	import ShopOrder from '_common/PC/ShopOrder'
+	import UserShops from '_common/PC/UserShops'
+	import UserFollow from '_common/PC/UserFollow'
+	import { Image as VanImage, Tag, Button, Field, Icon, Notify, Dialog, Overlay } from 'vant'
 	import { ACCESS } from '_config/user'
 	import API from '_api'
 	export default {
 		name: 'User',
-		components:{ VanImage, Header, Tag, Button, Field, Icon, Notify, Upload, EditShop, EditGoods },
+		components:{ VanImage, Header, Tag, Button, Field, Icon, Notify, Upload, EditShop, EditGoods, Overlay, UserOrder, ShopOrder, UserShops, UserFollow },
 		computed:{
 			user(){
 
@@ -152,7 +124,7 @@
 		data(){
 			return {
 				ACCESS,
-				active: 4,
+				active: 0,
 				edit: false,
 				editInfo: {
 					name:'',
@@ -163,12 +135,16 @@
 				shopList: [],
 				shopInfo: null,
 				shopId: null,
-				currency: null
+				currency: null,
+				deleteShop: false,
+				password: '',
+				deleteid: ''
 			}
 		},
 		async mounted(){
 
-			await this.getShop()
+			this.active = Number(this.$route.params.active)
+
 		},
 		methods:{
 			async editUser(){
@@ -243,25 +219,6 @@
 			  	}).catch(()=>{
 
 			  	})
-			},
-			async getShop(){
-
-				const { data } = await API.shop.getShop('/api/shop/get_shop')
-
-				if (data.success) {
-
-					this.shopList = data.data
-				}
-			},
-			async setRunning(_id,status,pass){
-				if (!pass) {
-					return Notify({ type: 'danger', message: '审核未通过，不可操作上架状态' })
-				}
-			},
-			async setOpen(_id,status,pass){
-				if (!pass) {
-					return Notify({ type: 'danger', message: '审核未通过，不可操作营业状态' })
-				}
 			}
 		}
 	}
@@ -273,7 +230,7 @@
 		.user-center-frame{
 			padding: 30px 120px;
 			.center-tab{
-				width: 20%;
+				width: 15%;
 				.center-tab-item{
 					height: 50px;
 					line-height: 50px;
@@ -287,7 +244,7 @@
 				}
 			}
 			.center-info{
-				width: 80%;
+				width: 85%;
 				background: $ZONEBACKGROUND;
 				height: 80vh;
 				overflow: auto;
@@ -330,43 +287,33 @@
 						}
 					}
 				}
-				.shop-list-frame{
-					flex-wrap: wrap;
-					.shop-item{
-						width: 30%;
-						height: 120px;
-						border: 1px solid #dcdcdc;
-						margin-bottom: 10px;
-						margin-right: 3%;
-						padding: 10px;
-						text-align: left;
-						.shop-item-info{
-							width: 58%;
-							.shop-item-name{
-								font-size: 16px;
-							}
-							a{
-								cursor: pointer;
-							}
-							.on{
-								color: #1989fa;
-							}
-							.off{
-								color: red;
-							}
-							.info-edit{
-								margin-top: 5px;
-								.edit{
-									color: #1989fa;
-								}
-							}
-						}
-					}
-				}
-				.shop-notice{
-					margin-top: 30px;
-				}
 			}
 		}
 	}
+	.wrapper {
+    	display: flex;
+    	align-items: center;
+    	justify-content: center;
+    	height: 100%;
+  	}
+  	.block {
+    	width: 500px;
+    	height: 250px;
+    	background-color: #fff;
+    	border-radius: 10px;
+    	overflow: hidden;
+    	padding: 20px;
+    	text-align: left;
+    	.title{
+    		padding: 10px 16px;
+    		color: red;
+    	}
+    	.password{
+    		margin-top: 20px;
+    	}
+    	.action{
+    		padding: 10px 16px;
+    		margin-top: 20px;
+    	}
+  	}
 </style>

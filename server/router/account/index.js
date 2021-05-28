@@ -4,4 +4,6 @@ module.exports = function(app) {
 
 	app.use('/info', require('./info'))
 
+	app.use('/follow', require('./follow'))
+
 }

@@ -4,9 +4,9 @@ const Schema = mongoose.Schema
 
 const FollowSchema = new Schema({
 
-	uid: { type: String, required: true, index: true },
+	user: { type: Schema.Types.ObjectId, ref: 'user', required: true, index: true },
 
-	sid: { type: String, required: true, index: true },
+	shop: { type: Schema.Types.ObjectId, ref: 'shop', required: true, index: true }
 },
 {
 	versionKey: false 

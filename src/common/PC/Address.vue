@@ -76,7 +76,7 @@
 					return Notify({ type: 'danger', message: '称呼或地址信息缺失' })
 				}
 
-				if (!this.phone.trim()||!this.wechat.trim()||!this.telegram.trim()) {
+				if (!this.phone.trim()&&!this.wechat.trim()&&!this.telegram.trim()) {
 
 					return Notify({ type: 'danger', message: '请填写至少一种联系方式' })
 				}
@@ -99,7 +99,7 @@
 					return Notify({ type: 'danger', message: '称呼或地址信息缺失' })
 				}
 
-				if (!this.phone.trim()||!this.wechat.trim()||!this.telegram.trim()) {
+				if (!this.phone.trim()&&!this.wechat.trim()&&!this.telegram.trim()) {
 
 					return Notify({ type: 'danger', message: '请填写至少一种联系方式' })
 				}

@@ -9,9 +9,9 @@
 				<div class="banner-body row-center-center">
 					<div class="banner-body-content row-between-center">
 						<div class="search-frame">
-							<input placeholder="搜索相关服务" />
+							<input placeholder="搜索相关店铺" v-model="param.keywords"/>
 						</div>
-						<div class="search-button">
+						<div class="search-button" @click="reset()">
 							搜索
 						</div>
 					</div>
@@ -27,7 +27,7 @@
 				</div>
 			</div>
 			<div class="home-shops-frame">
-				<ShopList :type="0"/>
+				<ShopList :type="0" :items="items" :loading="loading" :hasMore="hasMore" @search="search()"/>
 			</div>
 		</div>
 	</div>
@@ -38,6 +38,7 @@
 	import { setToken, getToken } from '@/libs/util'
 	import { Image as VanImage, Rate, Popover } from 'vant'
 	import { SERVICETYPE, PAYMENT, DELIVERY } from '_config/shop'
+	import API from '_api'
 	export default {
 		name: 'Home',
 		components:{ VanImage, Rate, Popover, ShopList, Header },
@@ -52,11 +53,54 @@
 				PAYMENT,
 				DELIVERY,
 				showUserAction: false,
+				loading: false,
+				hasMore: true,
+				param: {
+					page: 1,
+					rows: 40,
+					keywords: ''
+				},
+				items: []
 			}
 		},
-		methods:{
+		async mounted(){
 
-			logout(){
+			await this.search()
+		},
+		methods:{
+			async search(){
+
+				this.loading = true
+
+				const { data } = await API.show.getShops(this.param)
+
+				if (!data.success) {
+
+					return Notify({ type: 'danger', message: data.message })
+				}
+
+				this.loading = false
+
+				if (data.data.length<this.param.rows) {
+
+					this.hasMore = false
+				}
+
+				this.param.page++
+
+				this.items.push(...data.data)
+
+			},
+			async reset(){
+
+				this.items = []
+
+				this.param.page = 1
+
+				this.search()
+
+			},
+			async logout(){
 
 				setToken(null)
 
@@ -83,33 +127,6 @@
 			width: 100%;
 			height: 100%;
 			z-index: 1;
-			// .banner-header{
-			// 	padding: 10px 100px;
-			// 	.banner-header-content{
-			// 		color: #ffffff;
-			// 		.logo-frame{
-			// 			.logo-slogan{
-			// 				font-size: 25px;
-			// 				margin-left: 15px;
-			// 			}
-			// 		}
-			// 		.account{
-			// 			a{
-			// 				cursor: pointer;
-			// 				font-weight: bold;
-			// 				&:hover{
-			// 					color: $ACTIVECOLOR;
-			// 				}
-			// 			}
-			// 		}
-			// 		.user-frame{
-			// 			cursor: pointer;
-			// 			.username{
-			// 				margin-left: 10px;
-			// 			}
-			// 		}
-			// 	}
-			// }
 			.banner-brief{
 				font-size: 40px;
 				font-weight: bold;
@@ -138,6 +155,7 @@
 						line-height: 50px;
 						color: $BASECOLOR;
 						background: $ACTIVECOLOR;
+						cursor: pointer;
 					}
 				}
 			}

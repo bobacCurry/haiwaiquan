@@ -1,8 +1,12 @@
 const db_shop = require('../../model/schema/shop.js')
 
+const db_user = require('../../model/schema/user.js')
+
 const db_class = require('../../model/schema/class.js')
 
 const db_goods = require('../../model/schema/goods.js')
+
+const md5 = require('md5')
 
 module.exports = {
 
@@ -77,6 +81,73 @@ module.exports = {
 		}
 	},
 	del_shop: async (req, res, next) => {
+
+		const { _id, password } = req.body
+
+		const uid = req.uid
+
+		try{
+
+			const user = await db_user.findOne({ _id: uid, password: md5(password.trim()) })
+
+			if (!user) {
+
+				return res.send({ success: false, message: '登录密码错误' })
+			}
+
+			const shop = await db_shop.findOne({ _id, uid })
+
+			if (!shop) {
+
+				return res.send({ success: false, message: '店铺不存在' })
+			}
+
+			await db_shop.deleteOne({ _id })
+
+			await db_class.deleteMany({ shopid: _id })
+
+			await db_goods.deleteMany({ shopid: _id })
+
+			return res.send({ success: true, message: '删除成功' })
+
+		}catch(err){
+
+			return next(new Error(err))
+		}
+	},
+	set_open: async (req, res, next) => {
+
+		const { _id, open } = req.body
+
+		const uid = req.uid
+
+		try{
+
+			await db_shop.updateOne({ _id, uid: req.uid }, { open })
+
+			return res.send({ success: true, message: '更新成功' })
+
+		}catch(err){
+
+			return next(new Error(err))
+		}
+	},
+	set_running: async (req, res, next) => {
+
+		const { _id, running } = req.body
+
+		const uid = req.uid
+
+		try{
+
+			await db_shop.updateOne({ _id, uid: req.uid }, { running })
+
+			return res.send({ success: true, message: '更新成功' })
+
+		}catch(err){
+
+			return next(new Error(err))
+		}
 
 	},
 	get_class: async (req, res, next) => {

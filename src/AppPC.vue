@@ -2,7 +2,7 @@
 	<div id="app">
 		<Account v-if="showAccount"/>
 		<Address v-if="showAddress"/>
-		<router-view></router-view>
+		<router-view :key="$route.fullPath"></router-view>
 	</div>
 </template>
 <script>

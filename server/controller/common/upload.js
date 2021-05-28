@@ -4,7 +4,7 @@ const path = require('path')
 
 const BASEDIR = 'static'
 
-const TYPELIST = [ 'avatar', 'goods', 'shop' ]
+const TYPELIST = [ 'avatar', 'goods', 'shop', 'review' ]
 
 const exist_or_build = dir => {
 	// 文件夹不存在则创建

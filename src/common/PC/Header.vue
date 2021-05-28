@@ -13,7 +13,7 @@
 			<div  class="user-frame" @click.stop v-else>
 				<Popover v-model="showUserAction" :close-on-click-outside="true" trigger="click">
 					<div class="user-action-frame">
-						<div class="user-action-item" @click="$router.push('/user')">用户中心</div>
+						<div class="user-action-item" @click="$router.push('/user/0')">用户中心</div>
 						<div class="user-action-item" @click="logout()">退出登录</div>
 					</div>
 					<template #reference>

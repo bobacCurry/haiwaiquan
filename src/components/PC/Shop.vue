@@ -15,17 +15,17 @@
 							</div>
 						</div>
 						<div class="shop-follow">
-							<div>
-								<Icon name="like-o" size="20" v-if="!follow"/>
+							<div @click="following?unfollow():follow()">
+								<Icon name="like-o" size="20" v-if="!following"/>
 								<Icon name="like" size="20" color="#fc6923" v-else/>
 							</div>
-							<div :class="[follow?'follow':'']"><b>{{follow?'取消':'关注'}}</b></div>
+							<div :class="[following?'follow':'']"><b>{{following?'取消':'关注'}}</b></div>
 						</div>
 					</div>
 					<div class="shop-extra-info row-start-top">
 						<div class="extra-info-frame">
 							<div><b>起送价</b></div>
-							<div class="extra-info-value"><b>{{ shop.minprice }}{{shop.currency}}</b></div>
+							<div class="extra-info-value"><b>{{ shop.minprice }} {{CURRENCY[shop.currency]}}</b></div>
 						</div>
 						<div class="extra-info-frame">
 							<div><b>配送方式</b></div>
@@ -54,7 +54,7 @@
 		</div>
 		<div class="base-frame row-between-top">
 			<div class="base-frame-left">
-				<div class="shop-goods-frame" v-if="active===0">
+				<div class="shop-goods-frame" :style="{ display: active===0?'':'none' }">
 					<div class="shop-class-list row-start-center">
 						<div v-for="(item,key) in classList" :key="key" :class="['shop-class-item',class_active===item._id?'active':'']" @click="class_active=item._id">
 							<b>{{ item.name }}</b>
@@ -62,16 +62,18 @@
 					</div>
 					<div class="shop-goods-list row-between-top">
 						<div class="shop-goods-item row-between-top" v-for="(item,key) in classGoodsList" :key="key">
-							<VanImage :src="item.pics" fit="cover" width="40%" height="110px"/>
+							<VanImage :src="item.pics" fit="cover" width="40%" height="130px"/>
 							<div class="goods-info">
 								<div class="goods-name"><b>{{ item.code }}</b> <b>{{ item.name }}</b></div>
 								<div class="goods-tags">
 									<Tag type="success" v-for="(tag,key1) in item.tags" :key="key1" class="tags">{{ tag }}</Tag>
 									<Tag type="danger" class="tags" v-if="item.stop">已售完</Tag>
 								</div>
-								<div class="row-between-center">
-									<div class="goods-price"><b>{{ item.price }}{{shop.currency}}</b></div>
-									<div class="order-action row-start-center" v-if="!ordering">
+								<div>
+									<div class="goods-price">
+										<b>{{ item.price }}{{CURRENCY[shop.currency]}}/{{item.count===1?'':item.count}}{{UNIT[item.unit]}}</b>
+									</div>
+									<div class="order-action row-start-center" v-if="!ordering&&!item.stop">
 										<div class="order-sub" @click="order(item, false)">-</div>
 										<div class="order-num">{{orderList[item._id]?orderList[item._id]['count']:0}}</div>
 										<div class="order-add" @click="order(item, true)">+</div>
@@ -81,12 +83,17 @@
 						</div>
 					</div>
 				</div>
-				<div class="shop-info-frame" v-if="active===1">
+				<div class="shop-info-frame" :style="{ display: active===1?'':'none' }">
 					<h1>店铺照片</h1>
 					<div class="shop-pics-list row-start-center">
 						<div class="shop-pics-item" v-for="(item,key) in shop.pics" :key="key">
 							<VanImage :src="item" fit="cover" width="100%" height="100%"/>
 						</div>
+					</div>
+					<div class="shop-info-item row-start-top">
+						<Icon name="shop" size="22"/>
+					 	<div class="shop-info-text row-start-top">店铺介绍：</div>
+						<div style="max-width: 500px">{{shop.brief}}</div>
 					</div>
 					<div class="shop-info-item row-start-center">
 						<Icon name="map-marked" size="22"/>
@@ -111,18 +118,21 @@
 						<div class="shop-info-text">商家飞机：<a :href="'https://t.me/'+shop.telegram" target="_blank">{{ shop.telegram }}</a></div>
 					</div>
 				</div>
-				<div class="shop-comment-frame" v-if="active===2">
-					333
+				<div class="shop-comment-frame" :style="{ display: active===2?'':'none' }">
+					<Review :shopid="$route.params._id"/>
 				</div>
 			</div>
 			<div class="base-frame-right">
 				<div class="shop-notice-title"><b>商家公告</b></div>
 				<div class="shop-discount-frame">
 					<div class="title"><b>优惠</b></div>
-					<div class="list row-start-top" v-for="(item,key) in shop.discount">
+					<!-- <div class="list row-start-top" v-for="(item,key) in shop.discount">
 						<div>{{ key + 1 }}. </div><div class="discount-text">{{ item }}</div>
+					</div> -->
+					<div class="list row-start-top">
+						<div class="discount-text">{{ shop.discount }}</div>
 					</div>
-					<div class="list" v-if="!shop.discount.length">
+					<div class="list" v-if="!shop.discount">
 						暂无优惠信息
 					</div>
 				</div>
@@ -133,7 +143,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="shopping-cart" @click="showCart=true">
+			<div class="shopping-cart" @click="showCartAtion()">
 				<Badge :content="orderCount">
 					<VanImage src="/img/shop/shopping-cart.png" fit="cover" width="60px" height="60px"/>
 				</Badge>
@@ -143,10 +153,25 @@
 				    <div class="order-info-frame" @click.stop>
 				    	<div class="order-base">
 				    		<p>请选择收货地址:</p>
+				    		<div class="uinfo-list">
+				    			<RadioGroup v-model="uinfo">
+					    			<div class="uinfo-item" v-for="(item,key) in infoList" :key="key">
+					    				<Radio :name="item">
+					    					<div class="row-start-center">称呼：{{ item.name }} ｜ 地址：{{ item.address }}</div>
+						    				<br/>
+						    				<div class="row-start-center">电话：{{ item.phone }} ｜ 微信：{{ item.wechat }} ｜ 飞机：@{{ item.telegram }}</div>
+					    				</Radio>
+					    			</div>
+				    			</RadioGroup>
+				    			<div class="uinfo-item row-start-center" v-if="infoList.length<6" @click="$store.dispatch('setAddress',{ show: true, info: null })">
+				    				<Icon name="add-o" size="20"/> 
+				    				<span style="margin-left: 10px;cursor: pointer;">新增地址</span>
+				    			</div>
+				    		</div>
 				    	</div>
 				    	<div class="order-base row-between-center">
-				    		<p>请选择配送方式:</p>				    		
-			    			<RadioGroup v-model="payment">
+				    		<p>请选择付款方式:</p>
+			    			<RadioGroup v-model="orderInfo.payment">
 			    				<div class="row-start-center">
 			    					<div class="order-payment" v-for="(item,key) in shop.payment">
 					    				<Radio :name="item">{{ PAYMENT[item] }}</Radio>
@@ -165,19 +190,21 @@
 				    				</div>
 				    			</div>
 				    			<div>
-				    				{{ item.amount }}{{ shop.currency }}
+				    				{{ item.amount }} {{ CURRENCY[shop.currency] }}
 				    			</div>
 				    		</div>
 				    	</div>
 				    	<div class="order-memo">
-				    		<Field v-model="memo" rows="5" autosize label="客户备注" type="textarea" maxlength="150" placeholder="可备注您的要求，比如口味，忌口等" show-word-limit/>
+				    		<Field v-model="orderInfo.memo" rows="2" autosize label="客户备注" type="textarea" maxlength="150" placeholder="可备注您的要求，比如口味，忌口等" show-word-limit/>
 				    	</div>
 				    	<div class="order-create row-between-center">
 				    		<div class="order-amount">
-				    			<b>商品总计： {{ orderAmount }}{{ shop.currency }}</b>
+				    			<b>商品总计： {{ orderAmount }} {{ CURRENCY[shop.currency] }}</b>
 				    		</div>
 				    		<div>
-				    			<Button round type="info" style="width: 150px" :disabled="!orderAmount||orderAmount<shop.minprice">生成订单</Button>
+				    			<Button round type="info" style="width: 150px" :disabled="!orderAmount||orderAmount<shop.minprice" @click="createOrder()">
+				    				生成订单
+				    			</Button>
 				    		</div>
 				    	</div>
 				    </div>
@@ -188,79 +215,55 @@
 </template>
 <script>
 	import Header from '_common/PC/Header'
-	import { Image as VanImage, Rate, Tag, Icon, Badge, Overlay, Field, Button, RadioGroup, Radio } from 'vant'
-	import { SERVICETYPE, PAYMENT, DELIVERY } from '_config/shop'
+	import Review from '_common/PC/Review'
+	import { Image as VanImage, Rate, Tag, Icon, Badge, Overlay, Field, Button, RadioGroup, Radio, Notify, Dialog } from 'vant'
+	import { SERVICETYPE, PAYMENT, DELIVERY, CURRENCY, UNIT } from '_config/shop'
+	import { copyText } from '@/libs/util'
+	import API from '_api'
 	export default {
 		name: 'Shop',
-		components:{ VanImage, Rate, Header, Tag, Icon, Badge, Overlay, Field, Button, RadioGroup, Radio },
+		components:{ VanImage, Rate, Header, Review, Tag, Icon, Badge, Overlay, Field, Button, RadioGroup, Radio },
 		async mounted(){
 
+			await this.getShop()
+
+			await this.isfollow()
 		},
 		data(){
 			return {
 				PAYMENT,
 				DELIVERY,
-				active:0,
-				shop:{
-					type: 1,
-					name:'甜栗小酒馆',
-					logo:'https://i.pinimg.com/originals/48/78/6d/48786db88c95237f6e0b375dc991448a.png',
-					back:'/img/shop/shopback.png',
-					pics:[
-						'http://5b0988e595225.cdn.sohucs.com/images/20200321/764f13c8e5d240ccbda9a8204200554c.jpeg',
-						'http://5b0988e595225.cdn.sohucs.com/images/20200321/f361690db25a4a2dafdd81b84278143c.jpeg',
-						'https://a.ksd-i.com/a/2020-03-07/124889-821557.jpg'
-					],
-					brief:'新店开张，欢迎光临！',
-					rate:4.5,
-					stime:'08:00',
-					etime:'23:00',
-					payment:[0,1],
-					delivery:[0,1],
-					minprice:5000,
-					currency:'P',
-					city:'makati',
-					address:'서울 용산구 이태원동 57-28 1층',
-					notice:'感谢大家支持！',
-					discount:['首单减20','LP03 肉末双椒炒泡面（辣）原价200,8.8折优惠','加辣请拍原价70,7.1折优惠','满1000返50P券'],
-					phone:'630776889112',
-					wechat:'wawa997',
-					telegram:'guevaratech',
-					follow:50,
-					view:1000
-				},
-				classList: [
-					{ _id:'1', name:'推荐' },
-					{ _id:'2', name:'新品' },
-					{ _id:'3', name:'荤类' },
-					{ _id:'4', name:'素类' }
-				],
-				goodsList: [
-					{ _id:'sdsadas01',classid:['1'], code:'s01', name:'美食01', pics:'http://ifeidu.oss-cn-hongkong.aliyuncs.com/upload/goods/20200130/1580355914.jpg', price:'2000', count:'1', unit:'份', tags: ['新品','推荐'], stop: false },
-					{ _id:'sdsadas02',classid:['1'], code:'s02', name:'美食02', pics:'http://ifeidu.oss-cn-hongkong.aliyuncs.com/upload/goods/20200130/1580355812.jpg', price:'2000', count:'1', unit:'份', tags: ['新品'], stop: false },
-					{ _id:'sdsadas03',classid:['1'], code:'s03', name:'美食03', pics:'http://ifeidu.oss-cn-hongkong.aliyuncs.com/upload/goods/20190628/1561700190.jpg', price:'2000', count:'1', unit:'份', tags: [], stop: true },
-					{ _id:'sdsadas04',classid:['2'], code:'s04', name:'美食04', pics:'http://ifeidu.oss-cn-hongkong.aliyuncs.com/upload/goods/20190628/1561699989.jpg', price:'2000', count:'1', unit:'份', tags: [], stop: false },
-					{ _id:'sdsadas05',classid:['2'], code:'s05', name:'美食05', pics:'http://ifeidu.oss-cn-hongkong.aliyuncs.com/upload/goods/20201123/1606115897.jpg', price:'2000', count:'1', unit:'份', tags: ['新品'], stop: false },
-					{ _id:'sdsadas06',classid:['3'], code:'s06', name:'美食06', pics:'http://ifeidu.oss-cn-hongkong.aliyuncs.com/upload/goods/20201023/1603428399.jpg', price:'2000', count:'1', unit:'份', tags: [], stop: false },
-					{ _id:'sdsadas07',classid:['3'], code:'s07', name:'美食07', pics:'http://ifeidu.oss-cn-hongkong.aliyuncs.com/upload/goods/20190627/1561624271.jpg', price:'2000', count:'1', unit:'份', tags: ['新品'], stop: true },
-					{ _id:'sdsadas08',classid:['3'], code:'s08', name:'美食08', pics:'http://ifeidu.oss-cn-hongkong.aliyuncs.com/upload/goods/20201121/1605933529.jpg', price:'2000', count:'1', unit:'份', tags: ['推荐'], stop: false },
-					{ _id:'sdsadas09',classid:['4'], code:'s09', name:'美食09', pics:'http://ifeidu.oss-cn-hongkong.aliyuncs.com/upload/goods/20210315/1615776105.jpg', price:'2000', count:'1', unit:'份', tags: ['新品'], stop: true },
-					{ _id:'sdsadas10',classid:['4'], code:'s10', name:'美食10', pics:'http://ifeidu.oss-cn-hongkong.aliyuncs.com/upload/goods/20190701/1561958052.jpg', price:'2000', count:'1', unit:'份', tags: ['新品'], stop: false },
-					{ _id:'sdsadas11',classid:['4'], code:'s11', name:'美食11', pics:'http://ifeidu.oss-cn-hongkong.aliyuncs.com/upload/goods/20190628/1561702115.jpg', price:'2000', count:'1', unit:'份', tags: ['推荐'], stop: true },
-					{ _id:'sdsadas12',classid:['4'], code:'s12', name:'美食12', pics:'http://ifeidu.oss-cn-hongkong.aliyuncs.com/upload/goods/20190116/1547645162.jpeg', price:'2000', count:'1', unit:'份', tags: ['新品'], stop: false },
-					{ _id:'sdsadas13',classid:['4'], code:'s13', name:'美食13', pics:'http://ifeidu.oss-cn-hongkong.aliyuncs.com/upload/goods/20190829/1567062532.jpg', price:'2000', count:'1', unit:'份', tags: ['新品'], stop: true },
-					{ _id:'sdsadas14',classid:['4'], code:'s14', name:'美食14', pics:'http://ifeidu.oss-cn-hongkong.aliyuncs.com/upload/goods/20201204/1607058107.jpg', price:'2000', count:'1', unit:'份', tags: [], stop: false },
-				],
-				follow: false,
-				class_active:'1',
-				ordering:false,
-				showCart:false,
-				orderList:{},
-				memo:'',
-				payment:''
+				CURRENCY,
+				UNIT,
+				active: 0,
+				shop: {},
+				classList: [],
+				goodsList: [],
+				following: false,
+				class_active: '',
+				ordering: false,
+				showCart: false,
+				orderList: {},
+				uinfo: '',
+				orderInfo: {
+					uinfo: '',			
+					memo: '',
+					payment: 0,
+					items: [],
+					total: 0,
+					currency: '',
+					shopid: ''
+				}
 			}
 		},
 		computed:{
+			user(){
+				return this.$store.state.user
+			},
+			infoList(){
+
+				return this.$store.state.infoList
+			},
 			classGoodsList(){
 
 				const goodsList = this.goodsList.filter((item,key)=>{
@@ -304,6 +307,37 @@
 			}
 		},
 		methods:{
+			async isfollow(){
+
+				const { data } = await API.follow.isfollow(this.$route.params._id)
+
+				if (data.success) {
+
+					this.following = data.data? true: false
+				}
+			},
+			async getShop(){
+
+				const { data } = await API.show.getShop(this.$route.params._id)
+
+				if (!data.success) {
+
+					return Notify({ type: 'danger', message: data.message })
+				}
+
+				const { shop, classList, goodsList } = data.data
+
+				this.shop = shop
+
+				this.classList = classList
+
+				this.goodsList = goodsList
+
+				if (classList.length) {
+
+					this.class_active = classList[0]._id
+				}
+			},
 			async order(item, add){
 
 				this.ordering = true
@@ -342,8 +376,141 @@
 
 				this.ordering = false
 			},
-			async getShop(){
+			async createOrder(){
 
+				this.orderInfo.currency = this.shop.currency
+
+				this.orderInfo.items = []
+
+				for (let i in this.orderList) {
+					
+					this.orderInfo.items.push(this.orderList[i])
+				}
+
+				this.orderInfo.total = this.orderAmount
+
+				this.orderInfo.shopid = this.shop._id
+
+				if (!this.uinfo) {
+
+					return Notify({ type: 'danger', message: '请选择收货地址' })
+				}
+
+				if (!this.orderInfo.total) {
+
+					return Notify({ type: 'danger', message: '请选择购买的商品' })
+				}
+
+				this.orderInfo.uinfo = `称呼：${this.uinfo.name}\n地址：${this.uinfo.address}\n${this.uinfo.phone?('电话：'+this.uinfo.phone+'\n'):''}${this.uinfo.wechat?('微信：'+this.uinfo.wechat)+'\n':''}${this.uinfo.telegram?('飞机：@'+this.uinfo.telegram):''}`
+
+				const { data } = await API.order.newOrder(this.orderInfo)
+
+				if (!data.success) {
+
+					return Notify({ type: 'danger', message: data.message })
+				}
+
+				Notify({ type: 'success', message: data.message })
+
+				this.createOrderText()
+
+				this.showCart = false
+
+			},
+			async createOrderText(){
+
+				const { items, total, currency, uinfo, payment, memo } = this.orderInfo
+
+				let orderText = '点单商品：\n\n'
+
+				for (var i = 0; i < items.length; i++) {
+					
+					orderText += `${i+1}：${items[i].info.code}*${items[i].count}(${items[i].info.name}) ${items[i].amount}\n`
+				}
+
+				orderText += `\n总计：${total} ${this.CURRENCY[currency]}\n`
+
+				orderText += `\n付款方式：${this.PAYMENT[payment]}\n`
+
+				orderText += `\n联系方式：\n\n${uinfo}\n`
+
+				orderText += `\n备注：${memo}\n`
+
+				copyText(orderText)
+
+				alert('订单信息复制成功！')
+
+				Dialog.alert({
+
+				  	title: '发送订单信息给商家',
+				  	
+				  	message: '订单信息已经复制到您的剪切板，请点击 通知商家 并粘贴订单信息给商家',
+
+				  	confirmButtonText: '通知商家',
+				  	
+				  	theme: 'round-button',
+				
+				}).then(() => {
+
+					window.open(`https://t.me/${this.shop.telegram}`)
+
+					this.$router.push('/user/2')
+				})
+			},
+			async showCartAtion(){
+
+				if (this.user) {
+					
+					this.showCart=true
+
+					for (var i in this.infoList) {
+						
+						if (this.infoList[i].default) {
+
+							this.uinfo = this.infoList[i]
+						}
+					}
+
+				}else{
+
+					this.$store.dispatch('setAccount','login')
+				}
+			},
+			async follow(){
+
+				if (!this.user) {
+
+					return this.$store.dispatch('setAccount','login')
+				}
+
+				const { data } = await API.follow.follow(this.$route.params._id)
+
+				if (!data.success) {
+
+					return Notify({ type: 'danger', message: data.message })
+				}
+
+				this.following = true
+
+				return Notify({ type: 'success', message: data.message })
+			},
+			async unfollow(){
+
+				if (!this.user) {
+
+					return this.$store.dispatch('setAccount','login')
+				}
+
+				const { data } = await API.follow.unfollow(this.$route.params._id)
+
+				if (!data.success) {
+
+					return Notify({ type: 'danger', message: data.message })
+				}
+
+				this.following = false
+
+				return Notify({ type: 'success', message: data.message })
 			}
 		}
 	}
@@ -496,7 +663,7 @@
 				flex-wrap: wrap;
 				.shop-goods-item{
 					width: 49%;
-					height: 130px;
+					height: 150px;
 					padding: 10px;
 					background: $ZONEBACKGROUND;
 					margin-bottom: 10px;
@@ -506,17 +673,20 @@
 							font-size: 18px;
 						}
 						.goods-tags{
-							min-height: 50px;
+							min-height: 40px;
 							.tags{
 								margin-right: 5px;
 							}
 						}
 						.goods-price{
-							font-size: 18px;
+							b{
+								font-size: 18px;
+							}
 							color: $ACTIVECOLOR;
 						}
 						.order-action{
 							text-align: center;
+							margin-top: 10px;
 							.order-sub{
 								width: 40px;
 								height: 30px;
@@ -526,7 +696,7 @@
 								cursor: pointer;
 							}
 							.order-num{
-								width: 40px;
+								width: 60px;
 								height: 30px;
 								line-height: 30px;
 								border-top: 1px solid #dcdcdc;
@@ -592,6 +762,14 @@
 			.order-base{
 				.order-payment{
 					margin-left: 10px;
+				}
+				.uinfo-list{
+					margin-top: 10px;
+					.uinfo-item{
+						border: 1px solid #f7f7f7;
+						padding: 10px;
+						margin-bottom: 10px;
+					}
 				}
 			}
 			.order-list{

@@ -246,7 +246,7 @@
 			},
 			async delClass(_id){
 
-				Dialog.confirm({ title: '删除分类', message: '确认删除改商品分类么？' }).then(async () => {
+				Dialog.confirm({ title: '删除分类', message: '确认删除商品分类么？' }).then(async () => {
 
 					const { data } = await API.shop.delClass(this.shopId,_id)
 
@@ -389,7 +389,7 @@
 			},
 			async delGoods(_id){
 
-				Dialog.confirm({ title: '删除商品', message: '确认删除改商品么？' }).then(async () => {
+				Dialog.confirm({ title: '删除商品', message: '确认删除商品么？' }).then(async () => {
 
 					const { data } = await API.shop.delGoods(this.shopId,_id)
 				

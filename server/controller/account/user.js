@@ -96,7 +96,7 @@ module.exports = {
 
 		try{
 
-	      	const data = await db_user.findById(req.uid, { _id: 0, name: 1, account: 1, avatar: 1, points: 1, access: 1 })
+	      	const data = await db_user.findById(req.uid, { name: 1, account: 1, avatar: 1, points: 1, access: 1 })
 
 	      	return res.send({ success: true, message: '获取成功', data })
 

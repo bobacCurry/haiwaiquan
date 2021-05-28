@@ -24,6 +24,18 @@ export default {
 	    	
 	  	})
 	},
+	delShop : async (_id, password) => {
+
+		return await axios.request({
+	  
+	    	url: `/api/shop/del_shop`,
+	    
+	    	method: 'post',
+
+	    	data: { _id, password }
+	    	
+	  	})
+	},
 	updateShop : async (data) => {
 
 		return await axios.request({
@@ -34,6 +46,28 @@ export default {
 
 	    	data
 	    	
+	  	})
+	},
+	setOpen :  async (_id, open) => {
+
+		return await axios.request({
+	  
+	    	url: `/api/shop/set_open`,
+	    
+	    	method: 'post',
+
+	    	data: { _id, open }
+	  	})
+	},
+	setRunning :  async (_id, running) => {
+
+		return await axios.request({
+	  
+	    	url: `/api/shop/set_running`,
+	    
+	    	method: 'post',
+
+	    	data: { _id, running }
 	  	})
 	},
 	getClass :  async (shopid) => {
