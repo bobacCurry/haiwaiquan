@@ -6,7 +6,7 @@ const app = express()
 const httpServer = http.Server(app)
 const router = require('./router')
 const log = require('./middleware/error_log')
-const PORT = 8000
+const PORT = 8888
 
 const config = require('./config.js')
 
