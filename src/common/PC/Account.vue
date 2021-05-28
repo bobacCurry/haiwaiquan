@@ -37,6 +37,9 @@
 			    			<Field placeholder="请输入密码" type="password" size="large" v-model="register_password"/>
 			    		</div>
 			    		<div class="input-frame">
+			    			<Field placeholder="请再次输入密码" type="password" size="large" v-model="register_password_confirm"/>
+			    		</div>
+			    		<div class="input-frame">
 			    			<Field placeholder="请输入验证码" size="large" v-model="register_captcha"/>
 			    		</div>
 			    		<div class="text-frame">
@@ -70,7 +73,8 @@ export default {
 			register_account:'',
 			register_password:'',
 			register_captcha:'',
-			register_key:''
+			register_key:'',
+			register_password_confirm:''
 		}
 	},
 	computed:{
@@ -101,6 +105,11 @@ export default {
 			}
 		},
 		async register(){
+
+			if (this.register_password_confirm.trim()!==this.register_password.trim()) {
+
+				return Notify({ type: 'danger', message: '请保持密码输入一致' })
+			}
 
 			if (!this.register_account.trim()||!this.register_password.trim()||!this.register_captcha.trim()) {
 

@@ -45,6 +45,11 @@ module.exports = {
 	    	return res.send({ success: false, message: '验证码错误' })
 	    }
 
+	    if (password.length<6) {
+
+	    	return res.send({ success: false, message: '密码最少为6个字符' })
+	    }
+
 	    try{
 
 	    	const name = '圈友'+Math.ceil(Math.random()*1000)
