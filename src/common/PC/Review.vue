@@ -124,7 +124,7 @@
 				this.items.push(...data.data)
 
 			},
-			async lookPics(pics,index){
+			async lookPics(pics){
 
 				ImagePreview({ images: [pics], closeable: true })
 			},

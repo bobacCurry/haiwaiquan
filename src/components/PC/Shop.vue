@@ -62,7 +62,9 @@
 					</div>
 					<div class="shop-goods-list row-between-top">
 						<div class="shop-goods-item row-between-top" v-for="(item,key) in classGoodsList" :key="key">
-							<VanImage :src="item.pics" fit="cover" width="40%" height="130px"/>
+
+							<VanImage :src="item.pics" fit="cover" width="40%" height="130px" @click="lookPics(item.pics)"/>
+							
 							<div class="goods-info">
 								<div class="goods-name"><b>{{ item.code }}</b> <b>{{ item.name }}</b></div>
 								<div class="goods-tags">
@@ -182,7 +184,7 @@
 				    	<div class="order-list">
 				    		<div v-for="(item,key) in orderList" :key="key" class="row-between-top">
 				    			<div class="order-item row-start-top">
-				    				<div class="order-item-pics">
+				    				<div class="order-item-pics" @click="lookPics(item.info.pics)">
 					    				<VanImage :src="item.info.pics" fit="cover" width="100px" height="60px"/>
 					    			</div>
 				    				<div class="order-item-name">
@@ -216,7 +218,7 @@
 <script>
 	import Header from '_common/PC/Header'
 	import Review from '_common/PC/Review'
-	import { Image as VanImage, Rate, Tag, Icon, Badge, Overlay, Field, Button, RadioGroup, Radio, Notify, Dialog } from 'vant'
+	import { Image as VanImage, Rate, Tag, Icon, Badge, Overlay, Field, Button, RadioGroup, Radio, Notify, Dialog, ImagePreview } from 'vant'
 	import { SERVICETYPE, PAYMENT, DELIVERY, CURRENCY, UNIT } from '_config/shop'
 	import { copyText } from '@/libs/util'
 	import API from '_api'
@@ -511,6 +513,10 @@
 				this.following = false
 
 				return Notify({ type: 'success', message: data.message })
+			},
+			async lookPics(pics){
+
+				ImagePreview({ images: [pics], closeable: true })
 			}
 		}
 	}
