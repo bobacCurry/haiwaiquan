@@ -13,7 +13,7 @@
 						<Field v-model="wechat" label="微信" placeholder="您的微信号" />
 					</div>
 					<div class="info-item">
-						<Field v-model="telegram" label="飞机" placeholder="飞机的 username，可通过 @usernama 搜索到您" />
+						<Field v-model="telegram" label="飞机" :formatter="checkTelgram" placeholder="飞机的 username，不需要带@" />
 					</div>
 					<div class="info-item">
 						<Field v-model="address" type="textarea" rows="3" autosize label="地址" placeholder="你的详细收货地址" show-word-limit maxlength="200"/>
@@ -114,6 +114,10 @@
 				this.$store.dispatch('getInfoList')
 
 				this.$store.dispatch('setAddress', { show: false, info: null })	
+			},
+			checkTelgram(telegram){
+
+				return telegram.replace(/[^\w_]/g,'')
 			}		
 		}
 	}

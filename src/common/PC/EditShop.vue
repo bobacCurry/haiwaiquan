@@ -116,7 +116,7 @@
 						<Field v-model="shop.wechat" label="商家微信" placeholder="请输入联系用的微信号" />
 					</div>
 					<div class="input-frame">
-						<Field v-model="shop.telegram" required label="商家飞机" placeholder="请输入飞机的 username，可通过 @username 来查找" />
+						<Field v-model="shop.telegram" required label="商家飞机" :formatter="checkTelgram" placeholder="飞机的 username，不需要带@" />
 					</div>
 					<div class="input-frame action-frame">
 						<Button type="info" size="small" @click="shopInfo?updateShop():addShop()">提交审核</Button>
@@ -262,6 +262,10 @@
 						return Notify({ type: 'danger', message: response.data.message })
 					}
 				}
+			},
+			checkTelgram(telegram){
+
+				return telegram.replace(/[^\w_]/g,'')
 			}
 		}
 	}

@@ -31,7 +31,7 @@
 		    		<div class="register-frame" v-if="show==='register'">
 		    			<h1>注册海外圈</h1>
 		    			<div class="input-frame">
-			    			<Field placeholder="请输入用户名" size="large" v-model="register_account"/>
+			    			<Field placeholder="请输入用户名，数字字母和下划线" :formatter="formatter" size="large" v-model="register_account"/>
 			    		</div>
 			    		<div class="input-frame">
 			    			<Field placeholder="请输入密码" type="password" size="large" v-model="register_password"/>
@@ -153,6 +153,10 @@ export default {
 			Notify({ type: 'success', message: '登陆成功！' })
 
 			this.$store.dispatch('setAccount', null)
+		},
+		formatter(value){
+
+			return value.replace(/[^\w_]/g,'')
 		}
 	}
 }
