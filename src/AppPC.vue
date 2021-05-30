@@ -1,18 +1,25 @@
 <template>
 	<div id="app">
+		<router-view :key="$route.fullPath"></router-view>
 		<Account v-if="showAccount"/>
 		<Address v-if="showAddress"/>
-		<router-view :key="$route.fullPath"></router-view>
+		<div class="page-loading row-center-center" v-if="loading">
+	    	<div class="loading-icon">
+			    <Loading color="#40A6EB" type="spinner"/>
+			</div>
+		    <div class="loading-mask"></div>
+		</div>
 	</div>
 </template>
 <script>
 import Account from '_common/PC/Account'
 import Address from '_common/PC/Address'
+import { Loading } from 'vant'
 export default {
 	
 	name: 'AppPC',
 	
-	components:{ Account, Address },
+	components:{ Account, Address, Loading },
 	
 	computed:{
 		
@@ -23,7 +30,11 @@ export default {
 		showAddress(){
 			
 			return this.$store.state.showAddress
-		}
+		},
+		loading(){
+
+  			return this.$store.state.loading
+  		}
 	},
 	mounted(){
 
@@ -40,5 +51,26 @@ export default {
 		-moz-osx-font-smoothing: grayscale;
 		text-align: center;
 		color: #2c3e50;
+	}
+	.page-loading{
+		position: fixed;
+		top: 0;
+		left: 0;
+		z-index: 10;
+		width: 100%;
+		height: 100%;
+		text-align: center;
+		.loading-mask{
+			position: absolute;
+			top: 0;
+			left: 0;
+			z-index: 1;
+			width: 100%;
+			height: 100%;
+			background: rgba(0,0,0,0.2)
+		}
+		.loading-icon{
+			z-index: 5;
+		}
 	}
 </style>

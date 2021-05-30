@@ -227,9 +227,13 @@
 		components:{ VanImage, Rate, Header, Review, Tag, Icon, Badge, Overlay, Field, Button, RadioGroup, Radio },
 		async mounted(){
 
+			this.$store.dispatch('setLoading',true)
+
 			await this.getShop()
 
 			await this.isfollow()
+
+			this.$store.dispatch('setLoading',false)
 		},
 		data(){
 			return {

@@ -126,7 +126,11 @@
 				this.params.status = [ 0, 1, 2 ]
 			}
 
+			this.$store.dispatch('setLoading',true)
+
 			await this.getShopOrder()
+
+			this.$store.dispatch('setLoading',false)
 		},
 		data(){
 			return {

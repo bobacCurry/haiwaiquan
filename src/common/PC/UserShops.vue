@@ -119,9 +119,13 @@
 		},
 		async mounted(){
 
+			this.$store.dispatch('setLoading',true)
+
 			await this.getShop()
 
 			await this.getUnfinished()
+
+			this.$store.dispatch('setLoading',false)
 
 			this.intervalId = setInterval(async ()=>{ await this.getUnfinished() }, 60000)
 

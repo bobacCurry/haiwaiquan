@@ -72,7 +72,11 @@
 		},
 		async mounted(){
 
+			this.$store.dispatch('setLoading',true)
+
 			await this.getReview()
+
+			this.$store.dispatch('setLoading',false)
 		},
 		data(){
 			return {

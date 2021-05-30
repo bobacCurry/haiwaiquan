@@ -30,7 +30,11 @@
 		},
 		async mounted(){
 
+			this.$store.dispatch('setLoading',true)
+
 			await this.search()
+
+			this.$store.dispatch('setLoading',false)
 		},
 		methods:{
 

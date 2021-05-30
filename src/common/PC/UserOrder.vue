@@ -146,7 +146,11 @@
 		},
 		async mounted(){
 
+			this.$store.dispatch('setLoading',true)
+
 			await this.getUserOrder()
+
+			this.$store.dispatch('setLoading',false)
 		},
 		data(){
 			return {
