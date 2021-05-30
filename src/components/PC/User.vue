@@ -228,7 +228,7 @@
 	.page-frame{
 		background: $PAGEBACKGROUND;
 		.user-center-frame{
-			padding: 30px 120px;
+			padding: 30px 60px;
 			.center-tab{
 				width: 15%;
 				.center-tab-item{

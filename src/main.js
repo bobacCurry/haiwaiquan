@@ -14,7 +14,7 @@ Vue.config.productionTip = false
 
 const clientWidth = document.documentElement.clientWidth
 
-const mode = clientWidth>1200?'PC':'MB'
+const mode = clientWidth>700?'PC':'MB'
 
 const App = mode==='PC'?AppPC:AppMB
 

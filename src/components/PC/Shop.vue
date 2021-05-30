@@ -549,7 +549,7 @@
 		}
 		.base-frame{
 			width: 100%;
-			padding: 30px 120px;
+			padding: 30px 60px;
 			min-height: 80vh;
 		}
 		.zone-frame{
@@ -560,6 +560,7 @@
 			margin-top: 20px;
 			padding: 10px 100px;
 			color: $BASECOLOR;
+			overflow: auto;
 			.shop-base-info{
 				.shop-info{
 					margin-left: 20px;

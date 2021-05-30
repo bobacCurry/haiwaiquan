@@ -169,9 +169,10 @@
 		}
 	}
 	.home-body{
-		padding: 30px 120px;
+		padding: 30px 60px;
 		.home-service-frame{
 			width: 100%;
+			overflow: auto;
 			.service-item{
 				min-width: 140px;
 				padding: 20px;

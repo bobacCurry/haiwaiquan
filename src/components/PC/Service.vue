@@ -69,7 +69,7 @@
 		background: $PAGEBACKGROUND;
 		min-height: 100vh;
 		.zone-frame{
-			padding: 30px 120px;
+			padding: 30px 60px;
 			background: $ZONEBACKGROUND;
 		}
 		.shop-list-frame{
