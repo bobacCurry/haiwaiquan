@@ -9,7 +9,7 @@ const routes = [
       	component: Home,
       	meta:{
       		title:'海外圈-海外华人的圈圈',
-            keepAlive: true
+                  keepAlive: true
       	}
 	},
 	{
@@ -18,7 +18,7 @@ const routes = [
       	component: Service,
       	meta:{
       		title:'海外圈-商店服务',
-            keepAlive: true
+                  keepAlive: true
       	}
 	},
 	{
@@ -26,8 +26,7 @@ const routes = [
       	name: 'Shop',
       	component: Shop,
       	meta:{
-      		title:'海外圈-店铺信息',
-            keepAlive: true
+      		title:'海外圈-店铺信息'
       	}
 	},
 	{
