@@ -6,7 +6,7 @@
 				<a><Icon name="star-o" color="#ffffff" size="20"/></a>
 			</div>
 			<div class="page-banner-back">
-				<VanImage :src="shop.back" height="100%" fit="cover"/>
+				<VanImage :src="shop.back" width="100%" height="100%" fit="cover"/>
 			</div>
 			<div class="page-banner-mask"></div>
 			<div class="shop-banner-info">
@@ -36,7 +36,40 @@
 			<div class="tab-frame">
 				<Tabs v-model="active" background="#f7f7f7">
 				  	<Tab title="所有商品">
-				  		developing...
+				  		<div class="shop-goods-frame row-between-top">
+				  			<div class="shop-class-frame">
+				  				<div v-for="(item,key) in classList" :key="key" :class="['shop-class-item',class_active._id===item._id?'active':'']" @click="class_active=item">
+									<b>{{ item.name }}</b>
+								</div>
+				  			</div>
+				  			<div class="shop-class-goods">
+				  				<div class="shop-class-item-active">
+				  					<span><b>{{ class_active.name }}</b></span>
+				  				</div>
+				  				<div class="shop-goods-item row-between-center" v-for="(item,key) in classGoodsList" :key="key">
+				  					<div class="goods-img-frame" @click="lookPics([item.pics],0)">
+										<VanImage :src="item.pics" fit="cover" width="100%" height="100%"/>
+									</div>
+									<div class="goods-info">
+										<div class="goods-name"><b>{{ item.code }}</b> <b>{{ item.name }}</b></div>
+										<div class="goods-tags">
+											<Tag type="success" v-for="(tag,key1) in item.tags" :key="key1" class="tags">{{ tag }}</Tag>
+											<Tag type="danger" class="tags" v-if="item.stop">已售完</Tag>
+										</div>
+										<div>
+											<div class="goods-price">
+												<b>{{ item.price }}{{CURRENCY[shop.currency]}}/{{item.count===1?'':item.count}}{{UNIT[item.unit]}}</b>
+											</div>
+												<div class="order-action row-start-center" v-if="!ordering&&!item.stop">
+												<div class="order-sub" @click="order(item, false)">-</div>
+												<div class="order-num">{{orderList[item._id]?orderList[item._id]['count']:0}}</div>
+												<div class="order-add" @click="order(item, true)">+</div>
+											</div>
+										</div>
+									</div>
+								</div>
+				  			</div>
+				  		</div>
 				  	</Tab>
 				  	<Tab title="商家信息">
 				  		<div class="shop-info-frame">
@@ -94,7 +127,9 @@
 				  		</div>
 				  	</Tab>
 				  	<Tab title="用户点评">
-				  		developing...
+				  		<div class="shop-review-frame">
+				  			
+				  		</div>
 				  	</Tab>
 				</Tabs>
 			</div>
@@ -159,7 +194,7 @@ export default {
 
 			const goodsList = this.goodsList.filter((item,key)=>{
 
-				if (item.classid.indexOf(this.class_active) !==-1 ) {
+				if (item.classid.indexOf(this.class_active._id) !==-1 ) {
 
 					return true
 				}
@@ -229,7 +264,7 @@ export default {
 
 			if (classList.length) {
 
-				this.class_active = classList[0]._id
+				this.class_active = classList[0]
 			}
 		},
 		async order(item, add){
@@ -444,9 +479,9 @@ export default {
 		}
 		.shop-banner-info{
 			position: absolute;
-			top: 10vh;
-			left: 5vw;
-			width: 90vw;
+			top: 12vh;
+			left: 10px;
+			width: calc(100vw - 20px);
 			height: 20vh;
 			padding: 10px;
 			border-radius: 10px;
@@ -472,8 +507,7 @@ export default {
 	}
 	.page-shop-frame{
 		min-height: 80vh;
-		padding-top: 10vh;
-		padding-bottom: 5vh;
+		padding-top: 12vh;
 		text-align: left;
 		.shop-info-frame{
 			.shop-pics-list{
@@ -500,6 +534,99 @@ export default {
 					}
 				}
 			}
+		}
+		.shop-goods-frame{
+			.shop-class-frame{
+				width: 30%;
+				text-align: center;
+				height: calc(100vh - 44px);
+				background: $PAGEBACKGROUND;
+				.shop-class-item{
+					height: 40px;
+					line-height: 40px;
+					font-size: 12px;
+					&.active{
+						background: $BASEBACKGROUND;
+					}
+				}
+			}
+			.shop-class-goods{
+				width: 70%;
+				height: calc(100vh - 44px);
+				overflow: auto;
+				background: $BASEBACKGROUND;
+				.shop-class-item-active{
+					height: 40px;
+					line-height: 40px;
+					font-size: 12px;
+					span{
+						border-left: 2px solid #ee0a24;
+						padding-left: 10px;
+					}
+				}
+				.shop-goods-item{
+					width: 100%;
+					padding: 10px;
+					background: $ZONEBACKGROUND;
+					font-size: 12px;
+					.goods-img-frame{
+						width: 40%;
+						height: 80px;
+						border-radius: 5px;
+						overflow: hidden;
+					}
+					.goods-info{
+						width: 60%;
+						padding: 5px;
+						.goods-name{
+							font-size: 14px;
+						}
+						.goods-tags{
+							.tags{
+								margin-right: 5px;
+							}
+							margin-top: 5px;
+						}
+						.goods-price{
+							b{
+								font-size: 14px;
+							}
+							color: $ACTIVECOLOR;
+							margin-top: 5px;
+						}
+						.order-action{
+							text-align: center;
+							margin-top: 5px;
+							.order-sub{
+								width: 30px;
+								height: 20px;
+								line-height: 20px;
+								border: 1px solid #dcdcdc;
+								border-radius: 10px 0 0 10px;
+								cursor: pointer;
+							}
+							.order-num{
+								width: 40px;
+								height: 20px;
+								line-height: 20px;
+								border-top: 1px solid #dcdcdc;
+								border-bottom: 1px solid #dcdcdc;
+							}
+							.order-add{
+								width: 30px;
+								height: 20px;
+								line-height: 20px;
+								border: 1px solid #dcdcdc;
+								border-radius: 0 10px 10px 0;
+								cursor: pointer;
+							}
+						}
+					}
+				}
+			}
+		}
+		.shop-review-frame{
+
 		}
 	}
 </style>
