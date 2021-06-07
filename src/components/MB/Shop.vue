@@ -80,10 +80,9 @@
 										<VanImage :src="item" fit="cover" width="100%" height="100%"/>
 									</div>
 								</div>
-								<div class="shop-info-item row-start-top">
+								<div class="shop-info-item row-start-center">
 									<Icon name="shop" size="22"/>
-								 	<div class="shop-info-text row-start-top">店铺介绍：</div>
-									<div style="max-width: 500px">{{shop.brief}}</div>
+								 	<div class="shop-info-text">店铺介绍：{{shop.brief}}</div>
 								</div>
 								<div class="shop-info-item row-start-center">
 									<Icon name="map-marked" size="22"/>
