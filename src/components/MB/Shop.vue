@@ -566,7 +566,7 @@ export default {
 				}
 				.shop-goods-item{
 					width: 100%;
-					padding: 10px;
+					padding: 10px 5px;
 					background: $ZONEBACKGROUND;
 					font-size: 12px;
 					.goods-img-frame{
