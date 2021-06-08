@@ -2,6 +2,12 @@
 	<div class="page-frame">
 		<div class="home-banner">
 			<div class="banner-frame">
+				<div class="banner-mask"></div>
+				<VanImage src="/img/mobile/home/banner.png"/>
+			</div>
+		</div>
+		<div class="home-body">
+			<div class="body-banner">
 				<div class="banner-account row-between-center">
 					<div class="web-logo"><b>海外圈</b></div>
 					<div class="web-account" v-if="!user">
@@ -21,12 +27,7 @@
 						</Popover>
 					</div>
 				</div>
-				<div class="banner-mask"></div>
-				<VanImage src="/img/mobile/home/banner.png"/>
 			</div>
-		</div>
-		<div class="home-body">
-			<div class="body-banner"></div>
 			<div class="body-content">
 				<div class="search-frame">
 					<Search v-model="param.keywords" @search="reset"  placeholder="搜索相关店铺" shape="round"/>
@@ -138,22 +139,6 @@
 			width: 100%;
 			.banner-frame{
 				position: relative;
-				.banner-account{
-					position: absolute;
-					top: 0;
-					left: 0;
-					width: 100%;
-					z-index: 2;
-					color: #ffffff;
-					padding: 10px 20px;
-					.web-logo{
-						font-size: 20px;
-						color: #fc6923;
-					}
-					.web-account{
-						font-size: 14px;
-					}
-				}
 				.banner-mask{
 					position: absolute;
 					top: 0;
@@ -175,6 +160,17 @@
 			z-index: 5;
 			.body-banner{
 				height: 20vh;
+				.banner-account{
+					color: #ffffff;
+					padding: 20px 30px;
+					.web-logo{
+						font-size: 20px;
+						color: #fc6923;
+					}
+					.web-account{
+						font-size: 14px;
+					}
+				}
 			}
 			.body-content{
 				min-height: 80vh;
@@ -205,7 +201,7 @@
 		}
 	}
 	.user-action-frame{
-		padding: 0 5px 5px 5px;
+		padding: 0 10px 10px 10px;
 		.user-action-item{
 			margin-top: 10px;
 			cursor: pointer;
