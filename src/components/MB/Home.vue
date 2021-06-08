@@ -172,7 +172,7 @@
 			width: 100%;
 			height: 100vh;
 			overflow: auto;
-			z-index: 1;
+			z-index: 5;
 			.body-banner{
 				height: 20vh;
 			}
