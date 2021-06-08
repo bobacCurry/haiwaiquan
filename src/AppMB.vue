@@ -8,6 +8,7 @@
 		<router-view v-if="!$route.meta.keepAlive" :key="$route.fullPath">
 		    <!-- 这里是不被缓存的视图组件，比如 Edit！ -->
 		</router-view>
+		<Account v-if="showAccount"/>
 		<div class="page-loading row-center-center" v-if="loading">
 	    	<div class="loading-icon">
 			    <Loading color="#40A6EB" type="spinner"/>
@@ -17,11 +18,12 @@
 	</div>
 </template>
 <script>
+import Account from '_common/MB/Account'
 import { Loading } from 'vant'
 export default {
 	name: 'AppMB',
 
-	components:{ Loading },
+	components:{ Loading, Account },
 	
 	computed:{
 		

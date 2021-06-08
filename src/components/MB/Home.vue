@@ -2,6 +2,25 @@
 	<div class="page-frame">
 		<div class="home-banner">
 			<div class="banner-frame">
+				<div class="banner-account row-between-center">
+					<div class="web-logo"><b>海外圈</b></div>
+					<div class="web-account" v-if="!user">
+						<a  @click="$store.dispatch('setAccount','login')"><b>登录</b></a>
+						/
+						<a @click="$store.dispatch('setAccount','register')"><b>注册</b></a>
+					</div>
+					<div class="web-account" v-else>
+						<Popover v-model="showUserAction" :close-on-click-outside="true" trigger="click">
+							<div class="user-action-frame">
+								<div class="user-action-item" @click="$router.push('/user/0')">用户中心</div>
+								<div class="user-action-item" @click="logout()">退出登录</div>
+							</div>
+							<template #reference>
+								<VanImage :src="user.avatar" round height="40" width="40" fit="cover"/>
+							</template>
+						</Popover>
+					</div>
+				</div>
 				<div class="banner-mask"></div>
 				<VanImage src="/img/mobile/home/banner.png"/>
 			</div>
@@ -96,6 +115,14 @@
 
 				this.search()
 
+			},
+			async logout(){
+
+				setToken(null)
+
+				this.showUserAction = false
+
+				this.$store.dispatch('getUser')
 			}
 		}
 	}
@@ -111,6 +138,22 @@
 			width: 100%;
 			.banner-frame{
 				position: relative;
+				.banner-account{
+					position: absolute;
+					top: 0;
+					left: 0;
+					width: 100%;
+					z-index: 2;
+					color: #ffffff;
+					padding: 10px 20px;
+					.web-logo{
+						font-size: 20px;
+						color: #fc6923;
+					}
+					.web-account{
+						font-size: 14px;
+					}
+				}
 				.banner-mask{
 					position: absolute;
 					top: 0;
@@ -159,6 +202,17 @@
 				margin-top: 10px;
 			}
 			background: #f7f7f7;
+		}
+	}
+	.user-action-frame{
+		padding: 0 5px 5px 5px;
+		.user-action-item{
+			margin-top: 10px;
+			cursor: pointer;
+			font-size: 14px;
+			&:hover{
+				color: #fc6923;
+			}
 		}
 	}
 </style>
