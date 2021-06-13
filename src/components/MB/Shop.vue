@@ -638,6 +638,7 @@ export default {
 				height: calc(100vh - 44px);
 				overflow: auto;
 				background: $BASEBACKGROUND;
+				-webkit-overflow-scrolling: touch;
 				.shop-class-item-active{
 					height: 40px;
 					line-height: 40px;
@@ -718,7 +719,9 @@ export default {
 		height: 500px;
 		padding: 10px;
 		background: $PAGEBACKGROUND;
-		overflow-y: auto;
+		overflow: auto;
+	    overflow-x: hidden;
+	    overflow-y: scroll;
 		text-align: left;
 		font-size: 14px;
 		-webkit-overflow-scrolling: touch;
@@ -727,6 +730,7 @@ export default {
 			border-radius: 5px;
 			padding: 20px;
 			margin-bottom: 10px;
+			min-height: 50px;
 		}
 		.order-base{
 			.order-payment{
