@@ -134,6 +134,74 @@
 			</div>
 			<div></div>
 		</div>
+		<div class="shopping-cart row-center-center" v-if="!active" @click="showCartAtion()">
+			<div class="shopping-cart-button row-center-center">
+				<VanImage src="/img/shop/shopping-cart.png" width="30"/>
+				<div style="margin-left: 10px">购买商品({{ orderCount }})</div>
+			</div>
+		</div>
+		<Overlay :show="showCart" @click="showCart=false">
+			<div class="row-center-center">
+			    <div class="order-info-frame" @click.stop>
+			    	<div class="order-base">
+			    		<p>请选择收货地址:</p>
+			    		<div class="uinfo-list">
+			    			<RadioGroup v-model="uinfo">
+				    			<div class="uinfo-item" v-for="(item,key) in infoList" :key="key">
+				    				<Radio :name="item">
+				    					<div class="row-start-center">称呼：{{ item.name }} ｜ 地址：{{ item.address }}</div>
+					    				<br/>
+					    				<div class="row-start-center">电话：{{ item.phone }} ｜ 微信：{{ item.wechat }} ｜ 飞机：@{{ item.telegram }}</div>
+				    				</Radio>
+				    			</div>
+			    			</RadioGroup>
+			    			<div class="uinfo-item row-start-center" v-if="infoList.length<6" @click="$store.dispatch('setAddress',{ show: true, info: null })">
+			    				<Icon name="add-o" size="20"/> 
+			    				<span style="margin-left: 10px;cursor: pointer;">新增地址</span>
+			    			</div>
+			    		</div>
+			    	</div>
+			    	<div class="order-base row-between-center">
+			    		<p>请选择付款方式:</p>
+		    			<RadioGroup v-model="orderInfo.payment">
+		    				<div class="row-start-center">
+		    					<div class="order-payment" v-for="(item,key) in shop.payment">
+				    				<Radio :name="item">{{ PAYMENT[item] }}</Radio>
+				    			</div>
+			    			</div>
+		    			</RadioGroup>
+			    	</div>
+			    	<div class="order-list">
+			    		<div v-for="(item,key) in orderList" :key="key" class="row-between-top">
+			    			<div class="order-item row-start-top">
+			    				<div class="order-item-pics" @click="lookPics(item.info.pics)">
+				    				<VanImage :src="item.info.pics" fit="cover" width="100px" height="60px"/>
+				    			</div>
+			    				<div class="order-item-name">
+			    					{{ item.info.code }} {{ item.info.name }} * {{ item.count }}
+			    				</div>
+			    			</div>
+			    			<div>
+			    				{{ item.amount }} {{ CURRENCY[shop.currency] }}
+			    			</div>
+			    		</div>
+			    	</div>
+			    	<div class="order-memo">
+			    		<Field v-model="orderInfo.memo" rows="2" autosize label="客户备注" type="textarea" maxlength="150" placeholder="可备注您的要求，比如口味，忌口等" show-word-limit/>
+			    	</div>
+			    	<div class="order-create row-between-center">
+			    		<div class="order-amount">
+			    			<b>商品总计： {{ orderAmount }} {{ CURRENCY[shop.currency] }}</b>
+			    		</div>
+			    		<div>
+			    			<Button round type="info" style="width: 150px" :disabled="!orderAmount||orderAmount<shop.minprice" @click="createOrder()">
+			    				生成订单
+			    			</Button>
+			    		</div>
+			    	</div>
+			    </div>
+			</div>
+		</Overlay>
 	</div>
 </template>
 <script>
@@ -451,6 +519,21 @@ export default {
 	@import "~/css/variable.scss";
 	.page-frame{
 		background: $PAGEBACKGROUND;
+		.shopping-cart{
+			position: fixed;
+			left: 0;
+			bottom: 0;
+			width: 100vw;
+			height: 60px;
+			.shopping-cart-button{
+				width: 80%;
+				height: 40px;
+				line-height: 40px;
+				border-radius: 20px;
+				background: #fc6923;
+				color: #ffffff;
+			}
+		}
 	}
 	.page-banner{
 		height: 20vh;
@@ -540,6 +623,7 @@ export default {
 				text-align: center;
 				height: calc(100vh - 44px);
 				background: $PAGEBACKGROUND;
+				padding-bottom: 60px;
 				.shop-class-item{
 					height: 40px;
 					line-height: 40px;
@@ -625,6 +709,61 @@ export default {
 			}
 		}
 		.shop-review-frame{
+
+		}
+	}
+	.order-info-frame{
+		margin-top: 100px;
+		width: 300px;
+		height: 500px;
+		padding: 10px;
+		background: $PAGEBACKGROUND;
+		overflow-y: auto;
+		text-align: left;
+		font-size: 14px;
+		.order-base,.order-list,.order-create{
+			background: $ZONEBACKGROUND;
+			border-radius: 5px;
+			padding: 20px;
+			margin-bottom: 10px;
+		}
+		.order-base{
+			.order-payment{
+				margin-left: 10px;
+			}
+			.uinfo-list{
+				margin-top: 10px;
+				.uinfo-item{
+					border: 1px solid #f7f7f7;
+					padding: 10px;
+					margin-bottom: 10px;
+				}
+			}
+		}
+		.order-list{
+			.order-item{
+				margin-bottom: 10px;
+				.order-item-pics{
+					height: 60px;
+					width: 100px;
+					border-radius: 5px;
+					overflow: hidden;
+				}
+				.order-item-name{
+					padding-left: 10px;
+				}
+			}
+			.order-amount{
+				text-align: right;
+				margin-top: 20px;
+			}
+		}
+		.order-memo{
+			border-radius: 5px;
+			overflow: hidden;
+			margin-bottom: 10px;
+		}
+		.order-create{
 
 		}
 	}

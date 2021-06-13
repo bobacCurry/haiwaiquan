@@ -9,6 +9,7 @@
 		    <!-- 这里是不被缓存的视图组件，比如 Edit！ -->
 		</router-view>
 		<Account v-if="showAccount"/>
+		<Address v-if="showAddress"/>
 		<div class="page-loading row-center-center" v-if="loading">
 	    	<div class="loading-icon">
 			    <Loading color="#40A6EB" type="spinner"/>
@@ -19,11 +20,12 @@
 </template>
 <script>
 import Account from '_common/MB/Account'
+import Address from '_common/PC/Address'
 import { Loading } from 'vant'
 export default {
 	name: 'AppMB',
 
-	components:{ Loading, Account },
+	components:{ Loading, Account, Address },
 	
 	computed:{
 		
