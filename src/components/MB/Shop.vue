@@ -143,6 +143,20 @@
 		<Overlay :show="showCart" @click="showCart=false">
 			<div class="row-center-center">
 			    <div class="order-info-frame" @click.stop>
+			    	<div style="height: 50px;overflow: auto;">
+			    		<p>1111111111111</p>
+			    		<p>1111111111111</p>
+			    		<p>1111111111111</p>
+			    		<p>1111111111111</p>
+			    		<p>1111111111111</p>
+			    		<p>1111111111111</p>
+			    		<p>1111111111111</p>
+			    		<p>1111111111111</p>
+			    		<p>1111111111111</p>
+			    		<p>1111111111111</p>
+			    		<p>1111111111111</p>
+			    		<p>1111111111111</p>
+			    	</div>
 			    	<div class="order-base">
 			    		<p>请选择收货地址:</p>
 			    		<div class="uinfo-list">
