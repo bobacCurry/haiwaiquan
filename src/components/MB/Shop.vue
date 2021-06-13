@@ -721,6 +721,7 @@ export default {
 		overflow-y: auto;
 		text-align: left;
 		font-size: 14px;
+		-webkit-overflow-scrolling: touch;
 		.order-base,.order-list,.order-create{
 			background: $ZONEBACKGROUND;
 			border-radius: 5px;
