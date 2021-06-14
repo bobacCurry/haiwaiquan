@@ -165,28 +165,27 @@
 				    			</div>
 				    		</div>
 				    	</div>
-				    	<div class="order-base row-between-center">
-				    		<p>请选择付款方式:</p>
+				    	<div class="order-base">
+				    		<p>付款方式:</p><br/>
 			    			<RadioGroup v-model="orderInfo.payment">
 			    				<div class="row-start-center">
-			    					<div class="order-payment" v-for="(item,key) in shop.payment">
-					    				<Radio :name="item">{{ PAYMENT[item] }}</Radio>
-					    			</div>
+			    					<div class="payment-action" v-for="(item,key) in shop.payment">
+						    			<Radio :name="item">{{ PAYMENT[item] }}</Radio>
+						    		</div>
 				    			</div>
 			    			</RadioGroup>
 				    	</div>
 				    	<div class="order-list">
-				    		<div v-for="(item,key) in orderList" :key="key" class="row-between-top">
+				    		<div v-for="(item,key) in orderList" :key="key">
 				    			<div class="order-item row-start-top">
 				    				<div class="order-item-pics" @click="lookPics(item.info.pics)">
 					    				<VanImage :src="item.info.pics" fit="cover" width="100px" height="60px"/>
 					    			</div>
 				    				<div class="order-item-name">
-				    					{{ item.info.code }} {{ item.info.name }} * {{ item.count }}
+				    					<p>{{ item.info.code }} {{ item.info.name }} * {{ item.count }}</p>
+				    					<br>
+				    					<p><b>{{ item.amount }}</b> {{ CURRENCY[shop.currency] }}</p>
 				    				</div>
-				    			</div>
-				    			<div>
-				    				{{ item.amount }} {{ CURRENCY[shop.currency] }}
 				    			</div>
 				    		</div>
 				    	</div>
@@ -198,7 +197,7 @@
 				    			<b>商品总计： {{ orderAmount }} {{ CURRENCY[shop.currency] }}</b>
 				    		</div>
 				    		<div>
-				    			<Button round type="info" style="width: 150px" :disabled="!orderAmount||orderAmount<shop.minprice" @click="createOrder()">
+				    			<Button round type="info" size="small" :disabled="!orderAmount||orderAmount<shop.minprice" @click="createOrder()">
 				    				生成订单
 				    			</Button>
 				    		</div>
@@ -631,12 +630,12 @@ export default {
 			}
 		}
 		.shop-goods-frame{
+			padding-bottom: 60px;
 			.shop-class-frame{
 				width: 30%;
 				text-align: center;
 				height: calc(100vh - 44px);
 				background: $PAGEBACKGROUND;
-				padding-bottom: 60px;
 				.shop-class-item{
 					height: 40px;
 					line-height: 40px;
@@ -750,12 +749,11 @@ export default {
 	.order-info-frame{
 		position: absolute;
 		top: 100px;
-		left: 0;
-		width: 100%;
+		left: calc( 50% - 150px );
+		width: 300px;
 		z-index: 10;
 		.order-info{
 			width: 300px;
-			min-height: 500px;
 			height: 500px;
 			padding: 10px;
 			background: $PAGEBACKGROUND;
@@ -766,13 +764,13 @@ export default {
 			.order-base,.order-list,.order-create{
 				background: $ZONEBACKGROUND;
 				border-radius: 5px;
-				padding: 20px;
+				padding: 10px;
 				margin-bottom: 10px;
 				min-height: 50px;
 			}
 			.order-base{
-				.order-payment{
-					margin-left: 10px;
+				.payment-action{
+					margin-right: 20px;
 				}
 				.uinfo-list{
 					margin-top: 10px;
@@ -786,6 +784,8 @@ export default {
 			.order-list{
 				.order-item{
 					margin-bottom: 10px;
+					padding-bottom: 10px;
+					border-bottom: 1px solid #f7f7f7;
 					.order-item-pics{
 						height: 60px;
 						width: 100px;
@@ -797,7 +797,6 @@ export default {
 					}
 				}
 				.order-amount{
-					text-align: right;
 					margin-top: 20px;
 				}
 			}
