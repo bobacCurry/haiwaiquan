@@ -1,221 +1,212 @@
 <template>
-	<div class="page-frame">
-		<div class="page-banner">
-			<div class="page-banner-header row-between-center">
-				<a @click="goBack()"><Icon name="arrow-left" color="#ffffff" size="20"/></a>
-				<a><Icon name="star-o" color="#ffffff" size="20"/></a>
-			</div>
-			<div class="page-banner-back">
-				<VanImage :src="shop.back" width="100%" height="100%" fit="cover"/>
-			</div>
-			<div class="page-banner-mask"></div>
-			<div class="shop-banner-info">
-				<div class="row-start-center">
-					<VanImage :src="shop.logo" width="50" height="50" round fit="cover"/>
-					<div class="base-info">
-						<div class="shop-name"><b>{{ shop.name }}</b></div>
-						<div class="shop-rate row-between-center">
-							<Rate v-model="shop.rate" allow-half void-icon="star" size="14" color="#ffd21e" readonly void-color="#eee"/>
-							<div class="minprice">{{ shop.minprice }}{{CURRENCY[shop.currency]}}起送</div>
+	<div class="page-frame-shell">
+		<div class="page-frame">
+			<div class="page-banner">
+				<div class="page-banner-header row-between-center">
+					<a @click="goBack()"><Icon name="arrow-left" color="#ffffff" size="20"/></a>
+					<a><Icon name="star-o" color="#ffffff" size="20"/></a>
+				</div>
+				<div class="page-banner-back">
+					<VanImage :src="shop.back" width="100%" height="100%" fit="cover"/>
+				</div>
+				<div class="page-banner-mask"></div>
+				<div class="shop-banner-info">
+					<div class="row-start-center">
+						<VanImage :src="shop.logo" width="50" height="50" round fit="cover"/>
+						<div class="base-info">
+							<div class="shop-name"><b>{{ shop.name }}</b></div>
+							<div class="shop-rate row-between-center">
+								<Rate v-model="shop.rate" allow-half void-icon="star" size="14" color="#ffd21e" readonly void-color="#eee"/>
+								<div class="minprice">{{ shop.minprice }}{{CURRENCY[shop.currency]}}起送</div>
+							</div>
+						</div>
+					</div>
+					<div class="shop-info">
+						<div class="shop-info-item row-start-center">
+							<div>支持配送方式:</div>
+							<Tag type="success" v-for="(item,key) in shop.delivery" :key="key" class="tags">{{ DELIVERY[item] }}</Tag>
+						</div>
+						<div class="shop-info-item row-start-center">
+							<div>支持付款方式:</div>
+							<Tag type="success" v-for="(item,key) in shop.payment" :key="key" class="tags">{{ PAYMENT[item] }}</Tag>
 						</div>
 					</div>
 				</div>
-				<div class="shop-info">
-					<div class="shop-info-item row-start-center">
-						<div>支持配送方式:</div>
-						<Tag type="success" v-for="(item,key) in shop.delivery" :key="key" class="tags">{{ DELIVERY[item] }}</Tag>
-					</div>
-					<div class="shop-info-item row-start-center">
-						<div>支持付款方式:</div>
-						<Tag type="success" v-for="(item,key) in shop.payment" :key="key" class="tags">{{ PAYMENT[item] }}</Tag>
-					</div>
+			</div>
+			<div class="page-shop-frame">
+				<div class="tab-frame">
+					<Tabs v-model="active" background="#f7f7f7">
+					  	<Tab title="所有商品">
+					  		<div class="shop-goods-frame row-between-top">
+					  			<div class="shop-class-frame">
+					  				<div v-for="(item,key) in classList" :key="key" :class="['shop-class-item',class_active._id===item._id?'active':'']" @click="class_active=item">
+										<b>{{ item.name }}</b>
+									</div>
+					  			</div>
+					  			<div class="shop-class-goods">
+					  				<div class="shop-class-item-active">
+					  					<span><b>{{ class_active.name }}</b></span>
+					  				</div>
+					  				<div class="shop-goods-item row-between-center" v-for="(item,key) in classGoodsList" :key="key">
+					  					<div class="goods-img-frame" @click="lookPics([item.pics],0)">
+											<VanImage :src="item.pics" fit="cover" width="100%" height="100%"/>
+										</div>
+										<div class="goods-info">
+											<div class="goods-name"><b>{{ item.code }}</b> <b>{{ item.name }}</b></div>
+											<div class="goods-tags">
+												<Tag type="success" v-for="(tag,key1) in item.tags" :key="key1" class="tags">{{ tag }}</Tag>
+												<Tag type="danger" class="tags" v-if="item.stop">已售完</Tag>
+											</div>
+											<div>
+												<div class="goods-price">
+													<b>{{ item.price }}{{CURRENCY[shop.currency]}}/{{item.count===1?'':item.count}}{{UNIT[item.unit]}}</b>
+												</div>
+													<div class="order-action row-start-center" v-if="!ordering&&!item.stop">
+													<div class="order-sub" @click="order(item, false)">-</div>
+													<div class="order-num">{{orderList[item._id]?orderList[item._id]['count']:0}}</div>
+													<div class="order-add" @click="order(item, true)">+</div>
+												</div>
+											</div>
+										</div>
+									</div>
+					  			</div>
+					  		</div>
+					  	</Tab>
+					  	<Tab title="商家信息">
+					  		<div class="shop-info-frame">
+					  			<div class="shop-info-zone">
+						  			<h4>店铺照片</h4>
+									<div class="shop-pics-list row-between-center">
+										<div class="shop-pics-item" v-for="(item,key) in shop.pics" :key="key" @click="lookPics(shop.pics,key)">
+											<VanImage :src="item" fit="cover" width="100%" height="100%"/>
+										</div>
+									</div>
+									<div class="shop-info-item row-start-center">
+										<Icon name="shop" size="22"/>
+									 	<div class="shop-info-text">店铺介绍：{{shop.brief}}</div>
+									</div>
+									<div class="shop-info-item row-start-center">
+										<Icon name="map-marked" size="22"/>
+										<div class="shop-info-text">店铺地址：{{shop.city}} - {{shop.address}}</div>
+									</div>
+									<div class="shop-info-item row-start-center">
+										<Icon name="underway" size="22"/>
+										<div class="shop-info-text">营业时间：{{shop.stime}} - {{shop.etime}}</div>
+									</div>
+								</div>
+								<div class="shop-info-zone">
+									<h4>联系方式</h4>
+									<div class="shop-info-item row-start-center" v-if="shop.phone">
+										<Icon name="phone" size="22"/>
+										<div class="shop-info-text">商家电话：{{ shop.phone }}</div>
+									</div>
+									<div class="shop-info-item row-start-center" v-if="shop.wechat">
+										<Icon name="wechat" size="22"/>
+										<div class="shop-info-text">商家微信：{{ shop.wechat }}</div>
+									</div>
+									<div class="shop-info-item row-start-center" v-if="shop.telegram">
+										<VanImage src="/img/telegram.svg" fit="cover" width="20px" height="20px"/>
+										<div class="shop-info-text">商家飞机：<a :href="'https://t.me/'+shop.telegram" target="_blank">{{ shop.telegram }}</a></div>
+									</div>
+								</div>
+								<div class="shop-info-zone">
+									<h4>商家公告</h4>
+									<div class="shop-info-item">
+										{{ shop.notice }}
+									</div>
+								</div>
+								<div class="shop-info-zone">
+									<h4>商家优惠</h4>
+									<div class="shop-info-item">
+										<div class="list" v-if="!shop.discount">
+											暂无优惠信息
+										</div>
+										<div class="discount-text">{{ shop.discount }}</div>
+									</div>
+								</div>
+					  		</div>
+					  	</Tab>
+					  	<Tab title="用户点评">
+					  		<div class="shop-review-frame">
+					  			
+					  		</div>
+					  	</Tab>
+					</Tabs>
+				</div>
+				<div></div>
+			</div>
+			<div class="shopping-cart row-center-center" v-if="!active" @click="showCartAtion()">
+				<div class="shopping-cart-button row-center-center">
+					<VanImage src="/img/shop/shopping-cart.png" width="30"/>
+					<div style="margin-left: 10px">购买商品({{ orderCount }})</div>
 				</div>
 			</div>
 		</div>
-		<div class="page-shop-frame">
-			<div class="tab-frame">
-				<Tabs v-model="active" background="#f7f7f7">
-				  	<Tab title="所有商品">
-				  		<div class="shop-goods-frame row-between-top">
-				  			<div class="shop-class-frame">
-				  				<div v-for="(item,key) in classList" :key="key" :class="['shop-class-item',class_active._id===item._id?'active':'']" @click="class_active=item">
-									<b>{{ item.name }}</b>
-								</div>
-				  			</div>
-				  			<div class="shop-class-goods">
-				  				<div class="shop-class-item-active">
-				  					<span><b>{{ class_active.name }}</b></span>
-				  				</div>
-				  				<div class="shop-goods-item row-between-center" v-for="(item,key) in classGoodsList" :key="key">
-				  					<div class="goods-img-frame" @click="lookPics([item.pics],0)">
-										<VanImage :src="item.pics" fit="cover" width="100%" height="100%"/>
-									</div>
-									<div class="goods-info">
-										<div class="goods-name"><b>{{ item.code }}</b> <b>{{ item.name }}</b></div>
-										<div class="goods-tags">
-											<Tag type="success" v-for="(tag,key1) in item.tags" :key="key1" class="tags">{{ tag }}</Tag>
-											<Tag type="danger" class="tags" v-if="item.stop">已售完</Tag>
-										</div>
-										<div>
-											<div class="goods-price">
-												<b>{{ item.price }}{{CURRENCY[shop.currency]}}/{{item.count===1?'':item.count}}{{UNIT[item.unit]}}</b>
-											</div>
-												<div class="order-action row-start-center" v-if="!ordering&&!item.stop">
-												<div class="order-sub" @click="order(item, false)">-</div>
-												<div class="order-num">{{orderList[item._id]?orderList[item._id]['count']:0}}</div>
-												<div class="order-add" @click="order(item, true)">+</div>
-											</div>
-										</div>
-									</div>
-								</div>
-				  			</div>
-				  		</div>
-				  	</Tab>
-				  	<Tab title="商家信息">
-				  		<div class="shop-info-frame">
-				  			<div class="shop-info-zone">
-					  			<h4>店铺照片</h4>
-								<div class="shop-pics-list row-between-center">
-									<div class="shop-pics-item" v-for="(item,key) in shop.pics" :key="key" @click="lookPics(shop.pics,key)">
-										<VanImage :src="item" fit="cover" width="100%" height="100%"/>
-									</div>
-								</div>
-								<div class="shop-info-item row-start-center">
-									<Icon name="shop" size="22"/>
-								 	<div class="shop-info-text">店铺介绍：{{shop.brief}}</div>
-								</div>
-								<div class="shop-info-item row-start-center">
-									<Icon name="map-marked" size="22"/>
-									<div class="shop-info-text">店铺地址：{{shop.city}} - {{shop.address}}</div>
-								</div>
-								<div class="shop-info-item row-start-center">
-									<Icon name="underway" size="22"/>
-									<div class="shop-info-text">营业时间：{{shop.stime}} - {{shop.etime}}</div>
-								</div>
-							</div>
-							<div class="shop-info-zone">
-								<h4>联系方式</h4>
-								<div class="shop-info-item row-start-center" v-if="shop.phone">
-									<Icon name="phone" size="22"/>
-									<div class="shop-info-text">商家电话：{{ shop.phone }}</div>
-								</div>
-								<div class="shop-info-item row-start-center" v-if="shop.wechat">
-									<Icon name="wechat" size="22"/>
-									<div class="shop-info-text">商家微信：{{ shop.wechat }}</div>
-								</div>
-								<div class="shop-info-item row-start-center" v-if="shop.telegram">
-									<VanImage src="/img/telegram.svg" fit="cover" width="20px" height="20px"/>
-									<div class="shop-info-text">商家飞机：<a :href="'https://t.me/'+shop.telegram" target="_blank">{{ shop.telegram }}</a></div>
-								</div>
-							</div>
-							<div class="shop-info-zone">
-								<h4>商家公告</h4>
-								<div class="shop-info-item">
-									{{ shop.notice }}
-								</div>
-							</div>
-							<div class="shop-info-zone">
-								<h4>商家优惠</h4>
-								<div class="shop-info-item">
-									<div class="list" v-if="!shop.discount">
-										暂无优惠信息
-									</div>
-									<div class="discount-text">{{ shop.discount }}</div>
-								</div>
-							</div>
-				  		</div>
-				  	</Tab>
-				  	<Tab title="用户点评">
-				  		<div class="shop-review-frame">
-				  			
-				  		</div>
-				  	</Tab>
-				</Tabs>
-			</div>
-			<div></div>
-		</div>
-		<div class="shopping-cart row-center-center" v-if="!active" @click="showCartAtion()">
-			<div class="shopping-cart-button row-center-center">
-				<VanImage src="/img/shop/shopping-cart.png" width="30"/>
-				<div style="margin-left: 10px">购买商品({{ orderCount }})</div>
-			</div>
-		</div>
-		<Overlay :show="showCart" @click="showCart=false">
-			<div class="row-center-center">
-			    <div class="order-info-frame" @click.stop>
-			    	<div style="height: 50px;overflow: auto;">
-			    		<p>1111111111111</p>
-			    		<p>1111111111111</p>
-			    		<p>1111111111111</p>
-			    		<p>1111111111111</p>
-			    		<p>1111111111111</p>
-			    		<p>1111111111111</p>
-			    		<p>1111111111111</p>
-			    		<p>1111111111111</p>
-			    		<p>1111111111111</p>
-			    		<p>1111111111111</p>
-			    		<p>1111111111111</p>
-			    		<p>1111111111111</p>
-			    	</div>
-			    	<div class="order-base">
-			    		<p>请选择收货地址:</p>
-			    		<div class="uinfo-list">
-			    			<RadioGroup v-model="uinfo">
-				    			<div class="uinfo-item" v-for="(item,key) in infoList" :key="key">
-				    				<Radio :name="item">
-				    					<div class="row-start-center">称呼：{{ item.name }} ｜ 地址：{{ item.address }}</div>
-					    				<br/>
-					    				<div class="row-start-center">电话：{{ item.phone }} ｜ 微信：{{ item.wechat }} ｜ 飞机：@{{ item.telegram }}</div>
-				    				</Radio>
+		<div v-if="showCart" class="cart-content-frame">
+			<div class="cart-content">
+				<div class="cart-content-frame-mask" @click="showCart=false"></div>				
+			    <div class="order-info-frame row-center-center" @click.stop>
+			    	<div class="order-info">
+				    	<div class="order-base">
+				    		<p>请选择收货地址:</p>
+				    		<div class="uinfo-list">
+				    			<RadioGroup v-model="uinfo">
+					    			<div class="uinfo-item" v-for="(item,key) in infoList" :key="key">
+					    				<Radio :name="item">
+					    					<div class="row-start-center">称呼：{{ item.name }} ｜ 地址：{{ item.address }}</div>
+						    				<br/>
+						    				<div class="row-start-center">电话：{{ item.phone }} ｜ 微信：{{ item.wechat }} ｜ 飞机：@{{ item.telegram }}</div>
+					    				</Radio>
+					    			</div>
+				    			</RadioGroup>
+				    			<div class="uinfo-item row-start-center" v-if="infoList.length<6" @click="$store.dispatch('setAddress',{ show: true, info: null })">
+				    				<Icon name="add-o" size="20"/> 
+				    				<span style="margin-left: 10px;cursor: pointer;">新增地址</span>
+				    			</div>
+				    		</div>
+				    	</div>
+				    	<div class="order-base row-between-center">
+				    		<p>请选择付款方式:</p>
+			    			<RadioGroup v-model="orderInfo.payment">
+			    				<div class="row-start-center">
+			    					<div class="order-payment" v-for="(item,key) in shop.payment">
+					    				<Radio :name="item">{{ PAYMENT[item] }}</Radio>
+					    			</div>
 				    			</div>
 			    			</RadioGroup>
-			    			<div class="uinfo-item row-start-center" v-if="infoList.length<6" @click="$store.dispatch('setAddress',{ show: true, info: null })">
-			    				<Icon name="add-o" size="20"/> 
-			    				<span style="margin-left: 10px;cursor: pointer;">新增地址</span>
-			    			</div>
-			    		</div>
-			    	</div>
-			    	<div class="order-base row-between-center">
-			    		<p>请选择付款方式:</p>
-		    			<RadioGroup v-model="orderInfo.payment">
-		    				<div class="row-start-center">
-		    					<div class="order-payment" v-for="(item,key) in shop.payment">
-				    				<Radio :name="item">{{ PAYMENT[item] }}</Radio>
+				    	</div>
+				    	<div class="order-list">
+				    		<div v-for="(item,key) in orderList" :key="key" class="row-between-top">
+				    			<div class="order-item row-start-top">
+				    				<div class="order-item-pics" @click="lookPics(item.info.pics)">
+					    				<VanImage :src="item.info.pics" fit="cover" width="100px" height="60px"/>
+					    			</div>
+				    				<div class="order-item-name">
+				    					{{ item.info.code }} {{ item.info.name }} * {{ item.count }}
+				    				</div>
 				    			</div>
-			    			</div>
-		    			</RadioGroup>
-			    	</div>
-			    	<div class="order-list">
-			    		<div v-for="(item,key) in orderList" :key="key" class="row-between-top">
-			    			<div class="order-item row-start-top">
-			    				<div class="order-item-pics" @click="lookPics(item.info.pics)">
-				    				<VanImage :src="item.info.pics" fit="cover" width="100px" height="60px"/>
+				    			<div>
+				    				{{ item.amount }} {{ CURRENCY[shop.currency] }}
 				    			</div>
-			    				<div class="order-item-name">
-			    					{{ item.info.code }} {{ item.info.name }} * {{ item.count }}
-			    				</div>
-			    			</div>
-			    			<div>
-			    				{{ item.amount }} {{ CURRENCY[shop.currency] }}
-			    			</div>
-			    		</div>
-			    	</div>
-			    	<div class="order-memo">
-			    		<Field v-model="orderInfo.memo" rows="2" autosize label="客户备注" type="textarea" maxlength="150" placeholder="可备注您的要求，比如口味，忌口等" show-word-limit/>
-			    	</div>
-			    	<div class="order-create row-between-center">
-			    		<div class="order-amount">
-			    			<b>商品总计： {{ orderAmount }} {{ CURRENCY[shop.currency] }}</b>
-			    		</div>
-			    		<div>
-			    			<Button round type="info" style="width: 150px" :disabled="!orderAmount||orderAmount<shop.minprice" @click="createOrder()">
-			    				生成订单
-			    			</Button>
-			    		</div>
-			    	</div>
+				    		</div>
+				    	</div>
+				    	<div class="order-memo">
+				    		<Field v-model="orderInfo.memo" rows="2" autosize label="客户备注" type="textarea" maxlength="150" placeholder="可备注您的要求，比如口味，忌口等" show-word-limit/>
+				    	</div>
+				    	<div class="order-create row-between-center">
+				    		<div class="order-amount">
+				    			<b>商品总计： {{ orderAmount }} {{ CURRENCY[shop.currency] }}</b>
+				    		</div>
+				    		<div>
+				    			<Button round type="info" style="width: 150px" :disabled="!orderAmount||orderAmount<shop.minprice" @click="createOrder()">
+				    				生成订单
+				    			</Button>
+				    		</div>
+				    	</div>
+				    </div>
 			    </div>
 			</div>
-		</Overlay>
+		</div>
 	</div>
 </template>
 <script>
@@ -531,8 +522,16 @@ export default {
 </script>
 <style lang="scss" scoped>
 	@import "~/css/variable.scss";
+	.page-frame-shell{
+		position: relative;
+		width: 100vw;
+		height: 100vh;
+		overflow: hidden;
+	}
 	.page-frame{
 		background: $PAGEBACKGROUND;
+		height: 100vh;
+		overflow: auto;
 		.shopping-cart{
 			position: fixed;
 			left: 0;
@@ -652,7 +651,7 @@ export default {
 				height: calc(100vh - 44px);
 				overflow: auto;
 				background: $BASEBACKGROUND;
-				-webkit-overflow-scrolling: touch;
+				position: relative;
 				.shop-class-item-active{
 					height: 40px;
 					line-height: 40px;
@@ -727,63 +726,88 @@ export default {
 
 		}
 	}
+	.cart-content-frame{
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		z-index: 10;
+		.cart-content{
+			width: 100%;
+			height: 100%;
+			position: relative;
+			.cart-content-frame-mask{
+				position: absolute;
+				top: 0;
+				left: 0;
+				width: 100%;
+				height: 100%;
+				background: rgba(0,0,0,.5);
+			}
+		}
+	}
 	.order-info-frame{
-		margin-top: 100px;
-		width: 300px;
-		height: 500px;
-		padding: 10px;
-		background: $PAGEBACKGROUND;
-		overflow: auto;
-	    overflow-x: hidden;
-	    overflow-y: scroll;
-		text-align: left;
-		font-size: 14px;
-		-webkit-overflow-scrolling: touch;
-		.order-base,.order-list,.order-create{
-			background: $ZONEBACKGROUND;
-			border-radius: 5px;
-			padding: 20px;
-			margin-bottom: 10px;
-			min-height: 50px;
-		}
-		.order-base{
-			.order-payment{
-				margin-left: 10px;
-			}
-			.uinfo-list{
-				margin-top: 10px;
-				.uinfo-item{
-					border: 1px solid #f7f7f7;
-					padding: 10px;
-					margin-bottom: 10px;
-				}
-			}
-		}
-		.order-list{
-			.order-item{
+		position: absolute;
+		top: 100px;
+		left: 0;
+		width: 100%;
+		z-index: 10;
+		.order-info{
+			width: 300px;
+			min-height: 500px;
+			height: 500px;
+			padding: 10px;
+			background: $PAGEBACKGROUND;
+			overflow: auto;
+		    -webkit-overflow-scrolling: touch;
+			text-align: left;
+			font-size: 14px;
+			.order-base,.order-list,.order-create{
+				background: $ZONEBACKGROUND;
+				border-radius: 5px;
+				padding: 20px;
 				margin-bottom: 10px;
-				.order-item-pics{
-					height: 60px;
-					width: 100px;
-					border-radius: 5px;
-					overflow: hidden;
+				min-height: 50px;
+			}
+			.order-base{
+				.order-payment{
+					margin-left: 10px;
 				}
-				.order-item-name{
-					padding-left: 10px;
+				.uinfo-list{
+					margin-top: 10px;
+					.uinfo-item{
+						border: 1px solid #f7f7f7;
+						padding: 10px;
+						margin-bottom: 10px;
+					}
 				}
 			}
-			.order-amount{
-				text-align: right;
-				margin-top: 20px;
+			.order-list{
+				.order-item{
+					margin-bottom: 10px;
+					.order-item-pics{
+						height: 60px;
+						width: 100px;
+						border-radius: 5px;
+						overflow: hidden;
+					}
+					.order-item-name{
+						padding-left: 10px;
+					}
+				}
+				.order-amount{
+					text-align: right;
+					margin-top: 20px;
+				}
 			}
-		}
-		.order-memo{
-			border-radius: 5px;
-			overflow: hidden;
-			margin-bottom: 10px;
-		}
-		.order-create{
-
+			.order-memo{
+				border-radius: 5px;
+				overflow: hidden;
+				margin-bottom: 10px;
+			}
+			.order-create{
+			}
 		}
 	}
 </style>
