@@ -4,7 +4,10 @@
 			<div class="page-banner">
 				<div class="page-banner-header row-between-center">
 					<a @click="goBack()"><Icon name="arrow-left" color="#ffffff" size="20"/></a>
-					<a><Icon name="star-o" color="#ffffff" size="20"/></a>
+					<a @click="following?unfollow():follow()">
+						<Icon name="star-o" color="#ffffff" size="20"  v-if="!following"/>
+						<Icon name="star"  color="#fc6923" size="20"  v-else/>
+					</a>
 				</div>
 				<div class="page-banner-back">
 					<VanImage :src="shop.back" width="100%" height="100%" fit="cover"/>
@@ -128,7 +131,7 @@
 					  	</Tab>
 					  	<Tab title="用户点评">
 					  		<div class="shop-review-frame">
-					  			
+					  			<Review :shopid="$route.params._id"/>
 					  		</div>
 					  	</Tab>
 					</Tabs>
@@ -209,13 +212,14 @@
 	</div>
 </template>
 <script>
+import Review from '_common/MB/Review'
+import { copyText } from '@/libs/util'
 import { Image as VanImage, Rate, Tag, Icon, Badge, Overlay, Field, Button, RadioGroup, Radio, Notify, Dialog, ImagePreview, Tab, Tabs } from 'vant'
 import { SERVICETYPE, PAYMENT, DELIVERY, CURRENCY, UNIT } from '_config/shop'
-import { copyText } from '@/libs/util'
 import API from '_api'
 export default {
 	name: 'Shop',
-	components:{ VanImage, Rate, Tag, Icon, Badge, Overlay, Field, Button, RadioGroup, Radio, Tab, Tabs },
+	components:{ VanImage, Rate, Tag, Icon, Badge, Overlay, Field, Button, RadioGroup, Radio, Tab, Tabs, Review },
 	async mounted(){
 
 		this.$store.dispatch('setLoading',true)
