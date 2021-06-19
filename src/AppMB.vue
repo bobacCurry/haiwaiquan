@@ -20,7 +20,7 @@
 </template>
 <script>
 import Account from '_common/MB/Account'
-import Address from '_common/PC/Address'
+import Address from '_common/MB/Address'
 import { Loading } from 'vant'
 export default {
 	name: 'AppMB',

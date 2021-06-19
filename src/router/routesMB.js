@@ -1,6 +1,7 @@
 import Home from '@/components/MB/Home'
 import Service from '@/components/MB/Service'
 import Shop from '@/components/MB/Shop'
+import User from '@/components/MB/User'
 const routes = [
 	{
       	path: '/',
@@ -26,6 +27,14 @@ const routes = [
             component: Shop,
             meta:{
                   title:'海外圈-店铺信息'
+            }
+      },
+      {
+            path: '/user/:active',
+            name: 'User',
+            component: User,
+            meta:{
+                  title:'海外圈-个人中心',
             }
       }
 ]

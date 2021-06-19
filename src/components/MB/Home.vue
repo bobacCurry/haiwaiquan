@@ -18,7 +18,7 @@
 					<div class="web-account" v-else>
 						<Popover v-model="showUserAction" :close-on-click-outside="true" trigger="click">
 							<div class="user-action-frame">
-								<div class="user-action-item" @click="$router.push('/user/0')">用户中心</div>
+								<div class="user-action-item" @click="goToUser()">个人中心</div>
 								<div class="user-action-item" @click="logout()">退出登录</div>
 							</div>
 							<template #reference>
@@ -124,6 +124,15 @@
 				this.showUserAction = false
 
 				this.$store.dispatch('getUser')
+			},
+			async goToUser(){
+				
+				this.showUserAction = false
+
+				this.$nextTick(()=>{
+
+					this.$router.push('/user/0')
+				})
 			}
 		}
 	}

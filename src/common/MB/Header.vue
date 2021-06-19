@@ -1,6 +1,6 @@
 <template>
 	<div class="header-frame">
-		<NavBar :title="title" left-arrow  @click-left="goBack()">
+		<NavBar :title="title" left-arrow  @click-left="goHome()">
 			<template #left>
 				<div class="arrow-frame row-start-center">
 			    	<Icon name="arrow-left" color="black" size="20"/>
@@ -16,8 +16,8 @@
 		components:{ NavBar, Icon },
 		props:['title'],
 		methods:{
-			goBack(){
-				this.$router.go(-1)
+			goHome(){
+				this.$router.push('/')
 			}
 		}
 	}

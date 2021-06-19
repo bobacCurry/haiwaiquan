@@ -15,14 +15,14 @@
 						<div class="info-item-name">账号</div>
 						<div class="info-item-value">{{ user.account }}</div>
 					</div>
-					<div class="row-start-center user-info-item">
+					<!-- <div class="row-start-center user-info-item">
 						<div class="info-item-name">角色</div>
 						<div class="info-item-value row-start-center">
 							<div v-for="(item,key) in user.access" :key="key" class="user-access">
 								<Tag type="success" size="medium">{{ACCESS[item]}}</Tag>
 							</div>
 						</div>
-					</div>
+					</div> -->
 					<div class="row-start-center user-info-item">
 						<div class="info-item-name">头像</div>
 						<div class="info-item-value">
