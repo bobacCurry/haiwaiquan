@@ -42,50 +42,48 @@
 				<Pagination v-model="params.page" :items-per-page="params.rows" :total-items="total" @change="getUserOrder()"/>
 			</div>
 		</div>
-		<Overlay :show="showInfo" z-index="150"  @click.stop>
-			<div class="wrapper" @click="showInfo=false">
-				<div class="order-info-frame" @click.stop>
-					<div class="order-info-item">
-						<div v-for="(item,key) in orderInfo.items" :key="key" class="order-item row-between-top">
-							<div class="row-start-top">
-			    				<div class="order-item-pics">
-				    				<VanImage :src="item.info.pics" fit="cover" width="120px" height="80px"/>
-				    			</div>
-			    				<div class="order-item-name">
-			    					<div>{{ item.info.code }} {{ item.info.name }} * {{ item.count }}</div>
-			    					<br/>
-			    					<div>{{ item.amount }} {{ CURRENCY[orderInfo.currency] }}</div>
-			    				</div>
+		<ActionSheet v-model="showInfo" title="订单详情">
+			<div class="order-info-frame">
+				<div class="order-info-item">
+					<div v-for="(item,key) in orderInfo.items" :key="key" class="order-item row-between-top">
+						<div class="row-start-top">
+		    				<div class="order-item-pics">
+			    				<VanImage :src="item.info.pics" fit="cover" width="120px" height="80px"/>
 			    			</div>
-						</div>
-					</div>
-					<div class="order-info-item">
-						<p>总计：<b>{{ orderInfo.total }}</b> {{ CURRENCY[orderInfo.currency] }}</p>
-					</div>
-					<div class="order-info-item">
-						<p>付款方式：<b>{{ PAYMENT[orderInfo.payment] }}</b></p>
-					</div>
-					<div class="order-info-item">
-						<p>配送方式：<b>{{ DELIVERY[orderInfo.delivery] }}</b></p>
-					</div>
-					<div class="order-info-item">
-						<p>配送信息</p>
-						<p style="white-space: pre-line;margin-top: 10px">
-							{{ orderInfo.uinfo }}
-						</p>
-					</div>
-					<div class="order-info-item">
-						<p>订单备注：{{ orderInfo.memo }}</p>
-					</div>
-					<div class="order-info-item">
-						<p>下单时间：{{ orderInfo.created_at | formatTime }}</p>
-					</div>
-					<div class="order-info-item">
-						<p>订单状态：<b style="color: red">{{ ORDERSTATUS[orderInfo.status] }}</b></p>
+		    				<div class="order-item-name">
+		    					<div>{{ item.info.code }} {{ item.info.name }} * {{ item.count }}</div>
+		    					<br/>
+		    					<div>{{ item.amount }} {{ CURRENCY[orderInfo.currency] }}</div>
+		    				</div>
+		    			</div>
 					</div>
 				</div>
+				<div class="order-info-item">
+					<p>总计：<b>{{ orderInfo.total }}</b> {{ CURRENCY[orderInfo.currency] }}</p>
+				</div>
+				<div class="order-info-item">
+					<p>付款方式：<b>{{ PAYMENT[orderInfo.payment] }}</b></p>
+				</div>
+				<div class="order-info-item">
+					<p>配送方式：<b>{{ DELIVERY[orderInfo.delivery] }}</b></p>
+				</div>
+				<div class="order-info-item">
+					<p>配送信息</p>
+					<p style="white-space: pre-line;margin-top: 10px">
+						{{ orderInfo.uinfo }}
+					</p>
+				</div>
+				<div class="order-info-item">
+					<p>订单备注：{{ orderInfo.memo }}</p>
+				</div>
+				<div class="order-info-item">
+					<p>下单时间：{{ orderInfo.created_at | formatTime }}</p>
+				</div>
+				<div class="order-info-item">
+					<p>订单状态：<b style="color: red">{{ ORDERSTATUS[orderInfo.status] }}</b></p>
+				</div>
 			</div>
-		</Overlay>
+		</ActionSheet>
 		<Overlay :show="showReview" z-index="150"  @click.stop>
 			<div class="wrapper" @click="showReview=false">
 				<div class="review-info-frame" @click.stop>
@@ -128,14 +126,14 @@
 	</div>
 </template>
 <script>
-	import { Button, Image as VanImage, Checkbox, CheckboxGroup, Overlay, Pagination, Dialog, Rate, Field, Icon, Notify } from 'vant'
+	import { Button, Image as VanImage, Checkbox, CheckboxGroup, Overlay, Pagination, Dialog, Rate, Field, Icon, Notify, ActionSheet } from 'vant'
 	import { PAYMENT, DELIVERY, CURRENCY } from '_config/shop'
 	import { ORDERSTATUS } from '_config/order'
 	import API from '_api'
 	import { formatTime } from '@/libs/util'
 	import Upload from '_common/BASE/Upload'
 	export default {
-		components:{ Button, VanImage, Checkbox, CheckboxGroup, Overlay, Pagination, Rate, Field, Icon, Upload },
+		components:{ Button, VanImage, Checkbox, CheckboxGroup, Overlay, Pagination, Rate, Field, Icon, ActionSheet, Upload },
 		filters: {
 			formatTime(time){
 
@@ -386,34 +384,33 @@
 					padding-top: 10px;
 				}
 		    }
-		    .order-info-frame{
-		    	width: 300px;
-		    	height: 500px;
-		    	overflow: auto;
-			    background-color: #F7F7F7;
-			    text-align: left;
-			    padding: 20px;
-			    font-size: 14px;
-			    .order-info-item{
-			    	background: #ffffff;
-				    border-radius: 5px;
-				    padding: 10px 20px;
-				    margin-bottom: 10px;
-				    .order-item{
-						padding: 10px 0;
-						border-bottom: 1px solid #f7f7f7;
-						.order-item-pics{
-							height: 60px;
-							width: 100px;
-							border-radius: 5px;
-							overflow: hidden;
-						}
-						.order-item-name{
-							padding-left: 10px;
-						}
+		}
+		.order-info-frame{
+	    	height: 500px;
+	    	overflow: auto;
+		    background-color: #F7F7F7;
+		    text-align: left;
+		    padding: 20px;
+		    font-size: 14px;
+		    .order-info-item{
+		    	background: #ffffff;
+			    border-radius: 5px;
+			    padding: 10px 20px;
+			    margin-bottom: 10px;
+			    .order-item{
+					padding: 10px 0;
+					border-bottom: 1px solid #f7f7f7;
+					.order-item-pics{
+						height: 60px;
+						width: 100px;
+						border-radius: 5px;
+						overflow: hidden;
 					}
-			    }
-			}
+					.order-item-name{
+						padding-left: 10px;
+					}
+				}
+		    }
 		}
 	}
 </style>
