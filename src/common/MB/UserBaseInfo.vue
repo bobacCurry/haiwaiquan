@@ -1,5 +1,5 @@
 <template>
-	<div class="black-frame">
+	<div class="block-frame">
 		<div class="user-info-frame">
 			<div class="row-start-center info-item">
 				<div class="info-label">账号</div>
@@ -108,7 +108,7 @@
 </script>
 <style lang="scss" scoped>
 	@import "~/css/variable.scss";
-	.black-frame{
+	.block-frame{
 		padding-top: 10px;
 		.user-info-frame{
 			padding: 20px;

@@ -1,5 +1,5 @@
 <template>
-	<div class="black-frame">
+	<div class="block-frame">
 		<div class="shop-list row-between-center">
 			<div class="shop-item" v-for="(item,key) in items" :key="key">
 				<router-link :to="`/shop/${item.shop._id}`">
@@ -49,7 +49,7 @@
 </script>
 <style lang="scss" scoped>
 	@import "~/css/variable.scss";
-	.black-frame{
+	.block-frame{
 		padding-top: 10px;
 		.shop-list{
     		@extend .flex-wrap;

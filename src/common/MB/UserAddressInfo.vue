@@ -1,5 +1,5 @@
 <template>
-	<div class="black-frame">
+	<div class="block-frame">
 		<div class="address-list-frame row-start-center">
 			<div class="address-item" v-for="(item,key) in infoList" :key="key">
 				<div class="row-between-center">
@@ -86,7 +86,7 @@
 </script>
 <style lang="scss" scoped>
 	@import "~/css/variable.scss";
-	.black-frame{
+	.block-frame{
 		padding-top: 10px;
 		.address-list-frame{
 			flex-wrap: wrap;
