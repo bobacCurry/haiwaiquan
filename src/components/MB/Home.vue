@@ -210,9 +210,9 @@
 		}
 	}
 	.user-action-frame{
-		padding: 0 10px 10px 10px;
+		padding: 10px;
 		.user-action-item{
-			margin-top: 10px;
+			line-height: 35px;
 			cursor: pointer;
 			font-size: 14px;
 			&:hover{

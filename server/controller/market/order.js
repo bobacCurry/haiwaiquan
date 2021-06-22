@@ -118,7 +118,7 @@ module.exports = {
 				return res.send({ success: true, data: [], message: '用户商家不存在' })
 			}
 
-			const items = await db_order.find(query).populate('shop','name phone wechat telegram').sort({ created_at: -1 }).limit(limit).skip(skip)
+			const items = await db_order.find(query).populate('shop','name logo phone wechat telegram').sort({ created_at: -1 }).limit(limit).skip(skip)
 
 			const total = await db_order.find(query).countDocuments()
 

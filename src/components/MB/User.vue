@@ -41,6 +41,9 @@
 			<div v-if="active===4">
 				<UserShopInfo/>
 			</div>
+			<div v-if="active===5">
+				<ShopOrderInfo/>
+			</div>
 		</div>
 	</div>
 </template>
@@ -49,13 +52,14 @@
 	import UserBaseInfo from '_common/MB/UserBaseInfo'
 	import UserAddressInfo from '_common/MB/UserAddressInfo'
 	import UserOrderInfo from '_common/MB/UserOrderInfo'
+	import ShopOrderInfo from '_common/MB/ShopOrderInfo'
 	import UserFollowInfo from '_common/MB/UserFollowInfo'
 	import UserShopInfo from '_common/MB/UserShopInfo'
 	import { Image as VanImage, Tag, Button, Field, Icon, Notify } from 'vant'
 	import API from '_api'
 	export default {
 		name: 'User',
-		components:{ Header, UserBaseInfo, UserAddressInfo, UserOrderInfo, UserFollowInfo, UserShopInfo, VanImage },
+		components:{ Header, UserBaseInfo, UserAddressInfo, UserOrderInfo, ShopOrderInfo, UserFollowInfo, UserShopInfo, VanImage },
 		data(){
 			return {
 				active: 0
