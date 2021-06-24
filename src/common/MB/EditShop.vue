@@ -1,5 +1,5 @@
-<template>	
-	<ActionSheet v-model="show"  title="编辑商铺">			
+<template>
+	<ActionSheet v-model="show" @close="$emit('close')" title="编辑商铺">			
 		<div class="info-frame">
 			<div class="input-frame">
 				<div class="input-title">店铺类型</div>

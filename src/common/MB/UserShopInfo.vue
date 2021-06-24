@@ -46,6 +46,7 @@
 			</div>
 		</div>
 		<EditShop v-if="showShopEdit" :shopInfo="shopInfo" @confirm="getShop();showShopEdit=false" @close="showShopEdit=false"/>
+		<EditGoods v-if="showGoodsEdit" :shopId="shopId" :currency="currency" @close="showGoodsEdit=false"/>
 		<Overlay :show="deleteShop" v-if="deleteShop">
 			<div class="wrapper"  @click="deleteShop = false">
 			   	<div class="block"  @click.stop>
@@ -80,7 +81,7 @@
 <script>
 	import { Image as VanImage, Tag, Button, Field, Icon, Notify, Dialog, Overlay, Pagination } from 'vant'
 	import EditShop from '_common/MB/EditShop'
-	import EditGoods from '_common/PC/EditGoods'
+	import EditGoods from '_common/MB/EditGoods'
 	import API from '_api'
 	export default {
 		name: 'UserShops',

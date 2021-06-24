@@ -52,7 +52,7 @@
 			<p><b>请确保店铺信息真实，如发现虚假信息，您的店铺将会被强制下架。</b></p>
 		</div>
 		<EditShop v-if="showShopEdit" :shopInfo="shopInfo" @confirm="getShop();showShopEdit=false" @close="showShopEdit=false"/>
-		<EditGoods  v-if="showGoodsEdit" :shopId="shopId" :currency="currency" @close="showGoodsEdit=false"/>
+		<EditGoods v-if="showGoodsEdit" :shopId="shopId" :currency="currency" @close="showGoodsEdit=false"/>
 		<Overlay :show="deleteShop" v-if="deleteShop">
 			<div class="wrapper"  @click="deleteShop = false">
 			   	<div class="block"  @click.stop>
