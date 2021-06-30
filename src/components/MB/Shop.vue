@@ -145,81 +145,79 @@
 				</div>
 			</div>
 		</div>
+		<ActionSheet v-model="showCart" title="购物订单">
+	    	<div class="order-info">
+		    	<div class="order-base">
+		    		<p>请选择收货地址:</p>
+		    		<div class="uinfo-list">
+		    			<RadioGroup v-model="uinfo">
+			    			<div class="uinfo-item" v-for="(item,key) in infoList" :key="key">
+			    				<Radio :name="item">
+			    					<div class="row-start-center">称呼：{{ item.name }} ｜ 地址：{{ item.address }}</div>
+				    				<br/>
+				    				<div class="row-start-center">电话：{{ item.phone }} ｜ 微信：{{ item.wechat }} ｜ 飞机：@{{ item.telegram }}</div>
+			    				</Radio>
+			    			</div>
+		    			</RadioGroup>
+		    			<div class="uinfo-item row-start-center" v-if="infoList.length<6" @click="$store.dispatch('setAddress',{ show: true, info: null })">
+		    				<Icon name="add-o" size="20"/> 
+		    				<span style="margin-left: 10px;cursor: pointer;">新增地址</span>
+		    			</div>
+		    		</div>
+		    	</div>
+		    	<div class="order-base">
+		    		<p>付款方式:</p><br/>
+	    			<RadioGroup v-model="orderInfo.payment">
+	    				<div class="row-start-center">
+	    					<div class="payment-action" v-for="(item,key) in shop.payment">
+				    			<Radio :name="item">{{ PAYMENT[item] }}</Radio>
+				    		</div>
+		    			</div>
+	    			</RadioGroup>
+		    	</div>
+		    	<div class="order-list">
+		    		<div v-for="(item,key) in orderList" :key="key">
+		    			<div class="order-item row-start-top">
+		    				<div class="order-item-pics" @click="lookPics(item.info.pics)">
+			    				<VanImage :src="item.info.pics" fit="cover" width="100px" height="60px"/>
+			    			</div>
+		    				<div class="order-item-name">
+		    					<p>{{ item.info.code }} {{ item.info.name }} * {{ item.count }}</p>
+		    					<br>
+		    					<p><b>{{ item.amount }}</b> {{ CURRENCY[shop.currency] }}</p>
+		    				</div>
+		    			</div>
+		    		</div>
+		    	</div>
+		    	<div class="order-memo">
+		    		<Field v-model="orderInfo.memo" rows="2" autosize label="客户备注" type="textarea" maxlength="150" placeholder="可备注您的要求，比如口味，忌口等" show-word-limit/>
+		    	</div>
+		    	<div class="order-create row-between-center">
+		    		<div class="order-amount">
+		    			<b>商品总计： {{ orderAmount }} {{ CURRENCY[shop.currency] }}</b>
+		    		</div>
+		    		<div>
+		    			<Button round type="info" size="small" :disabled="!orderAmount||orderAmount<shop.minprice" @click="createOrder()">
+		    				生成订单
+		    			</Button>
+		    		</div>
+		    	</div>
+		    </div>
+		</ActionSheet>
 		<div v-if="showCart" class="cart-content-frame">
-			<div class="cart-content">
-				<div class="cart-content-frame-mask" @click="showCart=false"></div>				
-			    <div class="order-info-frame row-center-center" @click.stop>
-			    	<div class="order-info">
-				    	<div class="order-base">
-				    		<p>请选择收货地址:</p>
-				    		<div class="uinfo-list">
-				    			<RadioGroup v-model="uinfo">
-					    			<div class="uinfo-item" v-for="(item,key) in infoList" :key="key">
-					    				<Radio :name="item">
-					    					<div class="row-start-center">称呼：{{ item.name }} ｜ 地址：{{ item.address }}</div>
-						    				<br/>
-						    				<div class="row-start-center">电话：{{ item.phone }} ｜ 微信：{{ item.wechat }} ｜ 飞机：@{{ item.telegram }}</div>
-					    				</Radio>
-					    			</div>
-				    			</RadioGroup>
-				    			<div class="uinfo-item row-start-center" v-if="infoList.length<6" @click="$store.dispatch('setAddress',{ show: true, info: null })">
-				    				<Icon name="add-o" size="20"/> 
-				    				<span style="margin-left: 10px;cursor: pointer;">新增地址</span>
-				    			</div>
-				    		</div>
-				    	</div>
-				    	<div class="order-base">
-				    		<p>付款方式:</p><br/>
-			    			<RadioGroup v-model="orderInfo.payment">
-			    				<div class="row-start-center">
-			    					<div class="payment-action" v-for="(item,key) in shop.payment">
-						    			<Radio :name="item">{{ PAYMENT[item] }}</Radio>
-						    		</div>
-				    			</div>
-			    			</RadioGroup>
-				    	</div>
-				    	<div class="order-list">
-				    		<div v-for="(item,key) in orderList" :key="key">
-				    			<div class="order-item row-start-top">
-				    				<div class="order-item-pics" @click="lookPics(item.info.pics)">
-					    				<VanImage :src="item.info.pics" fit="cover" width="100px" height="60px"/>
-					    			</div>
-				    				<div class="order-item-name">
-				    					<p>{{ item.info.code }} {{ item.info.name }} * {{ item.count }}</p>
-				    					<br>
-				    					<p><b>{{ item.amount }}</b> {{ CURRENCY[shop.currency] }}</p>
-				    				</div>
-				    			</div>
-				    		</div>
-				    	</div>
-				    	<div class="order-memo">
-				    		<Field v-model="orderInfo.memo" rows="2" autosize label="客户备注" type="textarea" maxlength="150" placeholder="可备注您的要求，比如口味，忌口等" show-word-limit/>
-				    	</div>
-				    	<div class="order-create row-between-center">
-				    		<div class="order-amount">
-				    			<b>商品总计： {{ orderAmount }} {{ CURRENCY[shop.currency] }}</b>
-				    		</div>
-				    		<div>
-				    			<Button round type="info" size="small" :disabled="!orderAmount||orderAmount<shop.minprice" @click="createOrder()">
-				    				生成订单
-				    			</Button>
-				    		</div>
-				    	</div>
-				    </div>
-			    </div>
-			</div>
+			
 		</div>
 	</div>
 </template>
 <script>
 import Review from '_common/MB/Review'
 import { copyText } from '@/libs/util'
-import { Image as VanImage, Rate, Tag, Icon, Badge, Overlay, Field, Button, RadioGroup, Radio, Notify, Dialog, ImagePreview, Tab, Tabs } from 'vant'
+import { Image as VanImage, Rate, Tag, Icon, Badge, Overlay, Field, Button, RadioGroup, Radio, Notify, Dialog, ImagePreview, Tab, Tabs, ActionSheet } from 'vant'
 import { SERVICETYPE, PAYMENT, DELIVERY, CURRENCY, UNIT } from '_config/shop'
 import API from '_api'
 export default {
 	name: 'Shop',
-	components:{ VanImage, Rate, Tag, Icon, Badge, Overlay, Field, Button, RadioGroup, Radio, Tab, Tabs, Review },
+	components:{ VanImage, Rate, Tag, Icon, Badge, Overlay, Field, Button, RadioGroup, Radio, Tab, Tabs, Review, ActionSheet },
 	async mounted(){
 
 		this.$store.dispatch('setLoading',true)
@@ -729,88 +727,59 @@ export default {
 
 		}
 	}
-	.cart-content-frame{
-		position: absolute;
-		top: 0;
-		left: 0;
+	.order-info{
 		width: 100%;
-		height: 100%;
-		z-index: 10;
-		.cart-content{
-			width: 100%;
-			height: 100%;
-			position: relative;
-			.cart-content-frame-mask{
-				position: absolute;
-				top: 0;
-				left: 0;
-				width: 100%;
-				height: 100%;
-				background: rgba(0,0,0,.5);
+		height: 350px;
+		background: $PAGEBACKGROUND;
+		overflow: auto;
+	    -webkit-overflow-scrolling: touch;
+		text-align: left;
+		font-size: 14px;
+		.order-base,.order-list,.order-create{
+			background: $ZONEBACKGROUND;
+			border-radius: 5px;
+			padding: 10px;
+			margin-bottom: 10px;
+			min-height: 50px;
+		}
+		.order-base{
+			.payment-action{
+				margin-right: 20px;
+			}
+			.uinfo-list{
+				margin-top: 10px;
+				.uinfo-item{
+					border: 1px solid #f7f7f7;
+					padding: 10px;
+					margin-bottom: 10px;
+				}
 			}
 		}
-	}
-	.order-info-frame{
-		position: absolute;
-		top: 100px;
-		left: calc( 50% - 150px );
-		width: 300px;
-		z-index: 10;
-		.order-info{
-			width: 300px;
-			height: 500px;
-			padding: 10px;
-			background: $PAGEBACKGROUND;
-			overflow: auto;
-		    -webkit-overflow-scrolling: touch;
-			text-align: left;
-			font-size: 14px;
-			.order-base,.order-list,.order-create{
-				background: $ZONEBACKGROUND;
-				border-radius: 5px;
-				padding: 10px;
+		.order-list{
+			.order-item{
 				margin-bottom: 10px;
-				min-height: 50px;
-			}
-			.order-base{
-				.payment-action{
-					margin-right: 20px;
+				padding-bottom: 10px;
+				border-bottom: 1px solid #f7f7f7;
+				.order-item-pics{
+					height: 60px;
+					width: 100px;
+					border-radius: 5px;
+					overflow: hidden;
 				}
-				.uinfo-list{
-					margin-top: 10px;
-					.uinfo-item{
-						border: 1px solid #f7f7f7;
-						padding: 10px;
-						margin-bottom: 10px;
-					}
+				.order-item-name{
+					padding-left: 10px;
 				}
 			}
-			.order-list{
-				.order-item{
-					margin-bottom: 10px;
-					padding-bottom: 10px;
-					border-bottom: 1px solid #f7f7f7;
-					.order-item-pics{
-						height: 60px;
-						width: 100px;
-						border-radius: 5px;
-						overflow: hidden;
-					}
-					.order-item-name{
-						padding-left: 10px;
-					}
-				}
-				.order-amount{
-					margin-top: 20px;
-				}
+			.order-amount{
+				margin-top: 20px;
 			}
-			.order-memo{
-				border-radius: 5px;
-				overflow: hidden;
-				margin-bottom: 10px;
-			}
-			.order-create{
-			}
+		}
+		.order-memo{
+			border-radius: 5px;
+			overflow: hidden;
+			margin-bottom: 10px;
+		}
+		.order-create{
 		}
 	}
 </style>
