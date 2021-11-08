@@ -52,7 +52,7 @@
 					  				</div>
 					  				<div class="shop-goods-item row-between-center" v-for="(item,key) in classGoodsList" :key="key">
 					  					<div class="goods-img-frame" @click="lookPics([item.pics],0)">
-											<VanImage :src="item.pics" fit="cover" width="100%" height="100%"/>
+											<VanImage :src="item.pics" fit="cover" width="100%" height="100%" lazy-load/>
 										</div>
 										<div class="goods-info">
 											<div class="goods-name"><b>{{ item.code }}</b> <b>{{ item.name }}</b></div>

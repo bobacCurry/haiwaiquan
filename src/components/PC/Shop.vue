@@ -63,7 +63,7 @@
 					<div class="shop-goods-list row-between-top">
 						<div class="shop-goods-item row-between-top" v-for="(item,key) in classGoodsList" :key="key">
 
-							<VanImage :src="item.pics" fit="cover" width="40%" height="130px" @click="lookPics(item.pics)"/>
+							<VanImage :src="item.pics" fit="cover" width="40%" height="130px" lazy-load @click="lookPics(item.pics)"/>
 							
 							<div class="goods-info">
 								<div class="goods-name"><b>{{ item.code }}</b> <b>{{ item.name }}</b></div>

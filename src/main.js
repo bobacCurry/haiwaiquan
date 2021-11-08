@@ -8,7 +8,11 @@ import routerMode from './router'
 
 import store from './store/index'
 
+import { Lazyload } from 'vant'
+
 import '~/css/base.scss'
+
+Vue.use(Lazyload)
 
 Vue.config.productionTip = false
 
