@@ -32,9 +32,14 @@
 	    			return Notify({ type: 'danger', message: '请选择图片' })
 	    		}
 
-	    		if (file.size>500000) {
+	    		if (file.size>300000) {
 
-		          	return Notify({ type: 'danger', message: '图片大小不得超过500kb' })
+		          	return Notify({ type: 'danger', message: '图片大小不得超过300kb' })
+		        }
+
+		        if (file.size>50000&&this.type==='goods') {
+
+		        	return Notify({ type: 'danger', message: '商品图片大小不得超过50kb' })
 		        }
 
 	    		let vue = this
