@@ -51,7 +51,7 @@
 				</div>
 			</div>
 			<div class="input-frame">
-				<Field v-model="shop.brief" label="店铺介绍" placeholder="请输入店铺介绍" type="textarea" rows="3" autosize maxlength="300" show-word-limit/>
+				<Field v-model="shop.brief" label="店铺介绍" placeholder="请输入店铺介绍" type="textarea" rows="3" maxlength="300" show-word-limit/>
 			</div>
 			<div class="input-frame">
 				<Field v-model="shop.stime" required label="开始营业" placeholder="请输入开始营业时间 格式如 08:00" />
@@ -102,7 +102,7 @@
 				<Field v-model="shop.notice" label="店铺公告" placeholder="请输入店铺的公告信息" />
 			</div>
 			<div class="input-frame">
-				<Field v-model="shop.discount" label="店铺优惠" placeholder="请输入店铺的优惠信息" type="textarea" rows="3" autosize/>
+				<Field v-model="shop.discount" label="店铺优惠" placeholder="请输入店铺的优惠信息" type="textarea" rows="3"/>
 			</div>
 			<div class="input-frame">
 				<Field v-model="shop.phone" required label="商家手机" placeholder="请输入联系用的手机号" />
