@@ -461,6 +461,7 @@
 	    text-align: left;
 	    padding: 5px;
 	    font-size: 14px;
+	    padding-bottom: 100px;
 	}
 	.class-frame{
 		margin-top: 20px;
@@ -537,6 +538,7 @@
     	text-align: left;
 	    padding: 5px;
 	    font-size: 14px;
+	    padding-bottom: 100px;
 	    .goods-info-edit{
 	    	margin-top: 20px;
 	    }

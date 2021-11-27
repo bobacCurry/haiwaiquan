@@ -309,6 +309,7 @@
 		    text-align: left;
 		    padding: 20px;
 		    font-size: 14px;
+		    padding-bottom: 100px;
 		    .order-info-item{
 		    	background: #ffffff;
 			    border-radius: 5px;

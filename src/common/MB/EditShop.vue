@@ -272,6 +272,7 @@
     	overflow: auto;
 	    background-color: #ffffff;
 	    text-align: left;
+	    padding-bottom: 100px;
 	    .info-title{
 	    	padding: 16px;
 	    }
