@@ -3,11 +3,18 @@
 		<div class="page-frame">
 			<div class="page-banner">
 				<div class="page-banner-header row-between-center">
-					<a @click="goBack()"><Icon name="arrow-left" color="#ffffff" size="20"/></a>
-					<a @click="following?unfollow():follow()">
-						<Icon name="star-o" color="#ffffff" size="20"  v-if="!following"/>
-						<Icon name="star"  color="#fc6923" size="20"  v-else/>
-					</a>
+					<div>
+						<a @click="goBack()"><Icon name="arrow-left" color="#ffffff" size="20"/></a>
+					</div>
+					<div>
+						<a style="margin-right: 20px" @click="showShare=true">
+							<Icon name="share-o" size="20"/>
+						</a>
+						<a @click="following?unfollow():follow()">
+							<Icon name="star-o" color="#ffffff" size="20"  v-if="!following"/>
+							<Icon name="star"  color="#fc6923" size="20"  v-else/>
+						</a>
+					</div>
 				</div>
 				<div class="page-banner-back">
 					<VanImage :src="shop.back" width="100%" height="100%" fit="cover"/>
@@ -204,20 +211,19 @@
 		    	</div>
 		    </div>
 		</ActionSheet>
-		<div v-if="showCart" class="cart-content-frame">
-			
-		</div>
+		<ShareSheet v-model="showShare" :title="shop.name" :options="options" @select="shareTo" v-if="shop._id"/>
 	</div>
 </template>
 <script>
 import Review from '_common/MB/Review'
 import { copyText } from '@/libs/util'
-import { Image as VanImage, Rate, Tag, Icon, Badge, Overlay, Field, Button, RadioGroup, Radio, Notify, Dialog, ImagePreview, Tab, Tabs, ActionSheet } from 'vant'
+import { shareLink } from '@/libs/share'
+import { Image as VanImage, Rate, Tag, Icon, Badge, Overlay, Field, Button, RadioGroup, Radio, Notify, Dialog, ImagePreview, Tab, Tabs, ActionSheet, ShareSheet } from 'vant'
 import { SERVICETYPE, PAYMENT, DELIVERY, CURRENCY, UNIT } from '_config/shop'
 import API from '_api'
 export default {
 	name: 'Shop',
-	components:{ VanImage, Rate, Tag, Icon, Badge, Overlay, Field, Button, RadioGroup, Radio, Tab, Tabs, Review, ActionSheet },
+	components:{ VanImage, Rate, Tag, Icon, Badge, Overlay, Field, Button, RadioGroup, Radio, Tab, Tabs, Review, ActionSheet, ShareSheet },
 	async mounted(){
 
 		this.$store.dispatch('setLoading',true)
@@ -252,7 +258,15 @@ export default {
 				total: 0,
 				currency: '',
 				shopid: ''
-			}
+			},
+			showShare: false,
+	      	options: [
+		        { name: 'telegram', icon: '/img/share/telegram.png' },
+		        { name: 'whatsapp', icon: '/img/share/whatsapp.png' },
+		        { name: 'line', icon: '/img/share/line.png' },
+		        { name: 'facebook', icon: '/img/share/facebook.png' },
+		        { name: 'link', icon: 'link' }
+	      	],
 		}
 	},
 	computed:{
@@ -306,6 +320,10 @@ export default {
 		}
 	},
 	methods:{
+		async shareTo(option){
+			shareLink(option.name,window.location.href,this.shop.name,this.shop.brief)
+			this.showShare = false
+		},
 		async goBack(){
 			this.$router.go(-1)
 		},

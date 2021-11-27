@@ -41,11 +41,29 @@
 						</div>
 					</div>
 				</div>
+				<div class="share-frame row-start-center" v-if="shop._id">
+					<div>分享至：</div>
+					<div class="share-to">
+						<ShareNetwork network="Telegram" :url="url" :title="shop.name" :description="shop.brief" hashtags="">
+	    					<VanImage src="/img/share/telegram.png" width="30" height="30"/>
+						</ShareNetwork>
+					</div>
+					<div class="share-to">
+						<ShareNetwork network="WhatsApp" :url="url" :title="shop.name" :description="shop.brief" hashtags="">
+	    					<VanImage src="/img/share/whatsapp.png" width="30" height="30"/>
+						</ShareNetwork>
+					</div>
+					<div class="share-to">
+						<ShareNetwork network="Line" :url="url" :title="shop.name" :description="shop.brief" hashtags="">
+	    					<VanImage src="/img/share/line.png" width="30" height="30"/>
+						</ShareNetwork>
+					</div>
+				</div>
 			</div>
 			<div class="banner-mask">
 			</div>
 		</div>
-		<div class="shop-tag-frame">
+		<div class="shop-tag-frame row-between-center">
 			<div class="zone-frame row-start-center">
 				<div :class="['shop-tag-item',active===0?'active':'']" @click="active=0"><b>所有商品</b></div>
 				<div :class="['shop-tag-item',active===1?'active':'']" @click="active=1"><b>商家信息</b></div>
@@ -222,6 +240,9 @@
 	import { SERVICETYPE, PAYMENT, DELIVERY, CURRENCY, UNIT } from '_config/shop'
 	import { copyText } from '@/libs/util'
 	import API from '_api'
+	import VueSocialSharing from 'vue-social-sharing'
+	import Vue from 'vue'
+	Vue.use(VueSocialSharing);
 	export default {
 		name: 'Shop',
 		components:{ VanImage, Rate, Header, Review, Tag, Icon, Badge, Overlay, Field, Button, RadioGroup, Radio },
@@ -234,6 +255,7 @@
 			await this.isfollow()
 
 			this.$store.dispatch('setLoading',false)
+
 		},
 		data(){
 			return {
@@ -259,7 +281,8 @@
 					total: 0,
 					currency: '',
 					shopid: ''
-				}
+				},
+				url: window.location.href
 			}
 		},
 		computed:{
@@ -533,7 +556,7 @@
 		.page-banner{
 			@extend .common-background;
 			width: 100%;
-			height: 250px;
+			height: 280px;
 			position: relative;
 			.banner-mask{
 				@extend .mask;
@@ -808,6 +831,15 @@
 			}
 			.order-create{
 
+			}
+		}
+		.share-frame{
+			width: 100%;
+			padding: 10px 100px;
+			font-weight: bold;
+			color: #ffffff;
+			.share-to{
+				margin-left: 20px;
 			}
 		}
 	}
