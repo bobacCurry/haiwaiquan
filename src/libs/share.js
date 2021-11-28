@@ -21,5 +21,5 @@ export const shareLink = (net,url,title,description) => {
 
 	const link = AvailableNetworks[net].replace(/@u/g, encodeURIComponent(url)).replace(/@t/g, encodeURIComponent(title)).replace(/@d/g, encodeURIComponent(description))
 
-	window.open(link,'_self')
+	window.open(link)
 }
