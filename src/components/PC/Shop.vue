@@ -242,7 +242,7 @@
 	import API from '_api'
 	import VueSocialSharing from 'vue-social-sharing'
 	import Vue from 'vue'
-	Vue.use(VueSocialSharing);
+	Vue.use(VueSocialSharing)
 	export default {
 		name: 'Shop',
 		components:{ VanImage, Rate, Header, Review, Tag, Icon, Badge, Overlay, Field, Button, RadioGroup, Radio },
