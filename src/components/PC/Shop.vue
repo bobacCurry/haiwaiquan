@@ -63,7 +63,7 @@
 			<div class="banner-mask">
 			</div>
 		</div>
-		<div class="shop-tag-frame row-between-center">
+		<div class="shop-tag-frame">
 			<div class="zone-frame row-start-center">
 				<div :class="['shop-tag-item',active===0?'active':'']" @click="active=0"><b>所有商品</b></div>
 				<div :class="['shop-tag-item',active===1?'active':'']" @click="active=1"><b>商家信息</b></div>
