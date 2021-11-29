@@ -1,7 +1,7 @@
 import { copyText } from '@/libs/util'
 
 const AvailableNetworks = {
-	telegram: 'https://t.me/share/url?url=@u&text=@t%0D%0A@d',
+	telegram: 'https://t.me/share/url?url=@u&text=@t',
 	whatsapp: 'https://api.whatsapp.com/send?text=@t%0D%0A@u%0D%0A@d',
 	line: 'http://line.me/R/msg/text/?@t%0D%0A@u%0D%0A@d',
 	facebook: 'https://www.facebook.com/sharer/sharer.php?u=@u&title=@t&description=@d&quote=@q&hashtag=@h',
