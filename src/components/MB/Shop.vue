@@ -694,6 +694,10 @@ export default {
 		async lookPics(images,startPosition){
 
 			ImagePreview({ images, startPosition, closeable: true })
+		},
+		checkTelgram(telegram){
+
+			return telegram.replace(/[^\w_]/g,'')
 		}
 	}
 }	
