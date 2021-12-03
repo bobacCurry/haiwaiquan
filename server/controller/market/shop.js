@@ -25,7 +25,7 @@ module.exports = {
 	},
 	add_shop: async (req, res, next) => {
 
-		const { type, name, logo, back, pics, brief, stime, etime, payment, delivery, minprice, currency, city, address, notice, discount, phone, wechat, telegram } = req.body
+		const { type, name, logo, back, pics, brief, stime, etime, payment, delivery, minprice, currency, city, address, notice, discount, p_discount, phone, wechat, telegram } = req.body
 
 		if (!type||!name||!logo||!stime||!etime||!payment.length||!delivery.length||!city||!address) {
 
@@ -46,7 +46,7 @@ module.exports = {
 				return res.send({ success: false, message: '每个用户最多可创建3个店铺' })
 			}
 
-			const data = await db_shop.create({ uid: req.uid, type, name, logo, back, pics, brief, stime, etime, payment, delivery, minprice, currency, city, address, notice, discount, phone, wechat, telegram })
+			const data = await db_shop.create({ uid: req.uid, type, name, logo, back, pics, brief, stime, etime, payment, delivery, minprice, currency, city, address, notice, discount, p_discount, phone, wechat, telegram })
 
 			return res.send({ success: true, data, message: '添加成功' })
 
@@ -57,7 +57,7 @@ module.exports = {
 	},
 	update_shop: async (req, res, next) => {
 
-		const { _id, type, name, logo, back, pics, brief, stime, etime, payment, delivery, minprice, currency, city, address, notice, discount, phone, wechat, telegram } = req.body
+		const { _id, type, name, logo, back, pics, brief, stime, etime, payment, delivery, minprice, currency, city, address, notice, discount, p_discount, phone, wechat, telegram } = req.body
 
 		if (!_id||!_id.trim()||!type||!name||!logo||!stime||!etime||!payment.length||!delivery.length||!city||!address) {
 
@@ -71,7 +71,7 @@ module.exports = {
 
 		try{
 
-			const data = await db_shop.updateOne({ _id, uid: req.uid }, { type, name, logo, back, pics, brief, stime, etime, payment, delivery, minprice, currency, city, address, notice, discount, phone, wechat, telegram })
+			const data = await db_shop.updateOne({ _id, uid: req.uid }, { type, name, logo, back, pics, brief, stime, etime, payment, delivery, minprice, currency, city, address, notice, discount, p_discount, phone, wechat, telegram })
 
 			return res.send({ success: true, data, message: '更新成功' })
 

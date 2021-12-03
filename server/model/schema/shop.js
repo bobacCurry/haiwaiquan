@@ -41,6 +41,8 @@ const ShopSchema = new Schema({
 	notice: { type: String, default: '' },
 
 	discount: { type: String, default: '' },
+	//平台优惠
+	p_discount: { type: String, default: '' },
 
 	phone: { type: String, required: true },
 

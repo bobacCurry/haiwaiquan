@@ -134,6 +134,15 @@
 										<div class="discount-text">{{ shop.discount }}</div>
 									</div>
 								</div>
+								<div class="shop-info-zone">
+									<h4>平台优惠</h4>
+									<div class="shop-info-item">
+										<div class="list" v-if="!shop.p_discount">
+											暂无优惠信息
+										</div>
+										<div class="discount-text">{{ shop.p_discount }}</div>
+									</div>
+								</div>
 					  		</div>
 					  	</Tab>
 					  	<Tab title="用户点评">
@@ -198,6 +207,12 @@
 		    	</div>
 		    	<div class="order-memo">
 		    		<Field v-model="orderInfo.memo" rows="2" autosize label="客户备注" type="textarea" maxlength="150" placeholder="可备注您的要求，比如口味，忌口等" show-word-limit/>
+		    	</div>
+		    	<div class="order-base discount">
+		    		商家优惠：{{ shop.discount }}
+		    	</div>
+		    	<div class="order-base discount">
+		    		平台优惠：{{ shop.p_discount }}
 		    	</div>
 		    	<div class="order-create row-between-center">
 		    		<div class="order-amount">
@@ -455,6 +470,10 @@ export default {
 			orderText += `\n联系方式：\n\n${uinfo}\n`
 
 			orderText += `\n备注：${memo}\n`
+
+			orderText += `\n商家优惠：${this.shop.discount}\n`
+
+			orderText += `\n平台优惠：${this.shop.p_discount}\n`
 
 			copyText(orderText)
 
@@ -772,6 +791,11 @@ export default {
 					margin-bottom: 10px;
 				}
 			}
+		}
+		.discount{
+			color: red;
+			font-weight: bold;
+			line-height: 30px;
 		}
 		.order-list{
 			.order-item{

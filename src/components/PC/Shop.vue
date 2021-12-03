@@ -156,6 +156,15 @@
 						暂无优惠信息
 					</div>
 				</div>
+				<div class="shop-discount-frame">
+					<div class="title"><b>平台优惠</b></div>
+					<div class="list row-start-top">
+						<div class="discount-text">{{ shop.p_discount }}</div>
+					</div>
+					<div class="list" v-if="!shop.discount">
+						暂无平台优惠信息
+					</div>
+				</div>
 				<div class="shop-notice-frame">
 					<div class="title"><b>公告</b></div>
 					<div class="list">
@@ -217,6 +226,12 @@
 				    	<div class="order-memo">
 				    		<Field v-model="orderInfo.memo" rows="2" autosize label="客户备注" type="textarea" maxlength="150" placeholder="可备注您的要求，比如口味，忌口等" show-word-limit/>
 				    	</div>
+				    	<div class="order-base discount">
+			    			<b>商家优惠：{{ shop.discount }}</b>
+			    		</div>
+			    		<div class="order-base discount">
+			    			<b>平台优惠：{{ shop.p_discount }}</b>
+			    		</div>
 				    	<div class="order-create row-between-center">
 				    		<div class="order-amount">
 				    			<b>商品总计： {{ orderAmount }} {{ CURRENCY[shop.currency] }}</b>
@@ -805,6 +820,9 @@
 						margin-bottom: 10px;
 					}
 				}
+			}
+			.discount{
+				color: red;
 			}
 			.order-list{
 				.order-item{

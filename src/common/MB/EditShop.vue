@@ -105,6 +105,9 @@
 				<Field v-model="shop.discount" label="店铺优惠" placeholder="请输入店铺的优惠信息" type="textarea" rows="3"/>
 			</div>
 			<div class="input-frame">
+				<Field v-model="shop.p_discount" label="平台优惠" placeholder="该优惠只有在此平台才能享受" type="textarea" rows="3"/>
+			</div>
+			<div class="input-frame">
 				<Field v-model="shop.phone" required label="商家手机" placeholder="请输入联系用的手机号" />
 			</div>
 			<div class="input-frame">
@@ -157,7 +160,8 @@
 					discount: '',
 					phone: '',
 					wechat: '',
-					telegram: ''
+					telegram: '',
+					p_discount:''
 				}
 			}
 		},
