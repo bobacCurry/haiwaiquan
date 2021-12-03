@@ -240,7 +240,7 @@
     					</div>
     					<br/>
     					<div class="row-start-center">
-    						<Field v-model="uinfoNoLogin.phone" placeholder="您的电话号" required/>
+    						<Field v-model="uinfoNoLogin.phone" placeholder="您的电话号" type="number" required/>
     					</div>
     					<br/>
     					<div class="row-start-center">
@@ -298,6 +298,7 @@
 		    </div>
 		</ActionSheet>
 		<ShareSheet v-model="showShare" :title="shop.name" :options="options" @select="shareTo" v-if="shop._id"/>
+		<Button id="order-info-clipboard" v-clipboard:copy="orderText" v-clipboard:success="onCopy" v-clipboard:error="onError" class="needsclick" style="width: 0"></Button>
 	</div>
 </template>
 <script>
@@ -361,6 +362,7 @@ export default {
 		        { name: 'facebook', icon: '/img/share/facebook.png' },
 		        { name: 'link', icon: 'link' }
 	      	],
+	      	orderText: ''
 		}
 	},
 	computed:{
@@ -584,58 +586,43 @@ export default {
 
 			const { items, total, currency, uinfo, payment, memo, orderId } = this.orderInfo
 
-			let orderText = '点单商品：\n\n'
+			this.orderText = '点单商品：\n\n'
 
 			for (var i = 0; i < items.length; i++) {
 				
-				orderText += `${i+1}：${items[i].info.code}*${items[i].count}(${items[i].info.name}) ${items[i].amount}\n`
+				this.orderText += `${i+1}：${items[i].info.code}*${items[i].count}(${items[i].info.name}) ${items[i].amount}\n`
 			}
 
-			orderText += `\n总计：${total} ${this.CURRENCY[currency]}\n`
+			this.orderText += `\n总计：${total} ${this.CURRENCY[currency]}\n`
 
-			orderText += `\n付款方式：${this.PAYMENT[payment]}\n`
+			this.orderText += `\n付款方式：${this.PAYMENT[payment]}\n`
 
-			orderText += `\n联系方式：\n\n${uinfo}\n`
+			this.orderText += `\n联系方式：\n\n${uinfo}\n`
 
-			orderText += `\n备注：${memo}\n`
+			this.orderText += `\n备注：${memo}\n`
 
-			orderText += `\n商家优惠：${this.shop.discount}\n`
+			this.orderText += `\n商家优惠：${this.shop.discount}\n`
 
-			orderText += `\n平台优惠：${this.shop.p_discount}\n`
+			this.orderText += `\n平台优惠：${this.shop.p_discount}\n`
 
-			orderText += `\n订单码：${orderId}\n`
+			this.orderText += `\n订单码：${orderId}\n`
 
 			// copyText(orderText)
 
-			this.$copyText(orderText).then( (e) => {
+			// this.$copyText(this.orderText).then( (e) => {
 
-		        alert('订单信息复制成功！')
+		 //        alert('订单信息复制成功！')
 	        
-	        },  (e) => {
+	  //       },  (e) => {
 
-	        	alert('订单信息复制失败，请通知商家去后台查看订单信息！')
+	  //       	alert('订单信息复制失败，请通知商家去后台查看订单信息！')
 
-	        })
+	  //       })
 
-			Dialog.alert({
+	  		this.$nextTick(()=>{
 
-			  	title: '发送订单信息给商家',
-			  	
-			  	message: '订单信息已经复制到您的剪切板，请点击 通知商家 并粘贴订单信息给商家',
-
-			  	confirmButtonText: '通知商家',
-			  	
-			  	theme: 'round-button',
-			
-			}).then(() => {
-
-				window.open(`https://t.me/${this.shop.telegram}`)
-
-				if (this.user) {
-
-					this.$router.push('/user/2')
-				}
-			})
+	  			document.getElementById('order-info-clipboard').click()
+	  		})
 		},
 		async showCartAtion(){
 
@@ -706,6 +693,50 @@ export default {
 		checkTelgram(telegram){
 
 			return telegram.replace(/[^\w_]/g,'')
+		},
+		onCopy(){
+
+			Dialog.alert({
+
+			  	title: '发送订单信息给商家',
+			  	
+			  	message: '订单信息已经复制到您的剪切板，请点击 通知商家 并粘贴订单信息给商家',
+
+			  	confirmButtonText: '通知商家',
+			  	
+			  	theme: 'round-button',
+			
+			}).then(() => {
+
+				window.open(`https://t.me/${this.shop.telegram}`)
+
+				if (this.user) {
+
+					this.$router.push('/user/2')
+				}
+			})
+		},
+		onError(){
+
+			Dialog.alert({
+
+			  	title: '发送订单信息给商家',
+			  	
+			  	message: '订单信息复制失败，请通知商家去后台查看订单信息！',
+
+			  	confirmButtonText: '通知商家',
+			  	
+			  	theme: 'round-button',
+			
+			}).then(() => {
+
+				window.open(`https://t.me/${this.shop.telegram}`)
+
+				if (this.user) {
+
+					this.$router.push('/user/2')
+				}
+			})
 		}
 	}
 }	

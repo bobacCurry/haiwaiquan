@@ -260,7 +260,7 @@
 		    					</div>
 		    					<br/>
 		    					<div class="row-start-center">
-		    						<Field v-model="uinfoNoLogin.phone" placeholder="您的电话号" required/>
+		    						<Field v-model="uinfoNoLogin.phone" placeholder="您的电话号" type="number" required/>
 		    					</div>
 		    					<br/>
 		    					<div class="row-start-center">
