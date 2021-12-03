@@ -2,6 +2,8 @@ const mongoose = require('../db.js')
 
 const Schema = mongoose.Schema
 
+//初始化时，创建一个【代理下单用户】 access:['agency']  ！！！！
+
 const UserSchema = new Schema({
 
 	account: { type: String, required: true, unique: true },

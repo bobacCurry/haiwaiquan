@@ -605,9 +605,17 @@ export default {
 
 			orderText += `\n订单码：${orderId}\n`
 
-			copyText(orderText)
+			// copyText(orderText)
 
-			alert('订单信息复制成功！')
+			this.$copyText(orderText).then( (e) => {
+
+		        alert('订单信息复制成功！')
+	        
+	        },  (e) => {
+
+	        	alert('订单信息复制失败，请通知商家去后台查看订单信息！')
+
+	        })
 
 			Dialog.alert({
 

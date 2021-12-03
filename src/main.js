@@ -10,7 +10,11 @@ import store from './store/index'
 
 import { Lazyload } from 'vant'
 
+import VueClipboard from 'vue-clipboard2'
+
 import '~/css/base.scss'
+
+Vue.use(VueClipboard)
 
 Vue.use(Lazyload)
 
