@@ -83,7 +83,7 @@ module.exports = {
 
 		try{
 			
-			const user = await db_user.findOne({ account, password: md5(password.trim()) },'_id')
+			const user = await db_user.findOne({ account, password: md5(password.trim()), status: 1 },'_id')
 
 			if (!user) {
 

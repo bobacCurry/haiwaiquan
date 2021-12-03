@@ -8,6 +8,8 @@ const order = require('../../controller/market/order')
 
 router.post('/new_order', jwt.decode, order.new_order)
 
+router.post('/new_order_agency', order.new_order_agency)
+
 router.post('/get_user_order', jwt.decode, order.get_user_order)
 
 router.post('/get_shop_order', jwt.decode, order.get_shop_order)
@@ -25,5 +27,7 @@ router.post('/arrived', jwt.decode, order.arrived)
 router.post('/finish_order', jwt.decode, order.finish_order)
 
 router.post('/unfinished_count', jwt.decode, order.unfinished_count)
+
+router.post('/get_order', jwt.decode, order.get_order)
 
 module.exports = router

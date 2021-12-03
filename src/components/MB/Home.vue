@@ -32,7 +32,7 @@
 				<div class="search-frame">
 					<Search v-model="param.keywords" @search="reset"  placeholder="搜索相关店铺" shape="round"/>
 				</div>
-				<div class="home-service-frame row-start-center">
+				<div class="home-service-frame flex-wrap row-start-center">
 					<div class="service-item" v-for="(item,key) in SERVICETYPE" :key="key" @click="$router.push(`/service/${key+1}`)">
 						<VanImage :src="item.icon" fit="cover" width="40" height="40"/>
 						<div>{{ item.name }}</div>
@@ -192,7 +192,7 @@
 			width: 100%;
 			overflow: auto;
 			.service-item{
-				min-width: 80px;
+				width: 25%;
 				padding: 10px;
 				font-weight: bold;
 			}

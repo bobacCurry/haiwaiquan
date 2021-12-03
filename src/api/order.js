@@ -13,6 +13,17 @@ export default {
 	    	data
 	  	})
 	},
+	newOrderAgency : async (data) => {
+
+		return await axios.request({
+	  
+	    	url: `/api/order/new_order_agency`,
+	    
+	    	method: 'post',
+
+	    	data
+	  	})
+	},
 	getUserOrder : async (data) => {
 
 		return await axios.request({
@@ -29,6 +40,17 @@ export default {
 		return await axios.request({
 	  
 	    	url: `/api/order/get_shop_order`,
+	    
+	    	method: 'post',
+
+	    	data
+	  	})
+	},
+	getOrder : async (data) => {
+
+		return await axios.request({
+	  
+	    	url: `/api/order/get_order`,
 	    
 	    	method: 'post',
 

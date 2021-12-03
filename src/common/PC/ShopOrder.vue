@@ -4,7 +4,7 @@
 			<h1>商铺订单列表</h1>
 		</div>
 		<br>
-		<div>
+		<div class="row-between-center">
 			<CheckboxGroup v-model="params.status" @change="getShopOrder()">
 				<div class="row-start-center">
 					<span v-for="(item,key) in ORDERSTATUS" :key="key" style="margin-right: 10px">
@@ -12,6 +12,11 @@
 					</span>
 				</div>
 			</CheckboxGroup>
+			<Search v-model="orderId" show-action label="订单码" placeholder="订单查询，输入订单码" class="row-between-center">
+				<template #action>
+				    <div style="padding: 0 5px;background: #07c160;color: #ffffff" @click="orderSearch()">查询订单</div>
+				</template>
+			</Search>
 		</div>
 		<div class="order-list-frame" v-if="items.length">
 			<div class="order-item order-item-title row-start-center">
@@ -103,14 +108,14 @@
 	</div>
 </template>
 <script>
-	import { Button, Image as VanImage, Overlay, Radio, RadioGroup, Checkbox, CheckboxGroup, Pagination, Dialog, Notify } from 'vant'
+	import { Button, Image as VanImage, Overlay, Radio, RadioGroup, Checkbox, CheckboxGroup, Pagination, Dialog, Notify, Search } from 'vant'
 	import { PAYMENT, DELIVERY, CURRENCY } from '_config/shop'
 	import { ORDERSTATUS } from '_config/order'
 	import API from '_api'
 	import { formatTime } from '@/libs/util'
 	export default {
 		name: 'ShopOrders',
-		components:{ Button, VanImage, Radio, RadioGroup, Checkbox, CheckboxGroup, Overlay, Pagination, Dialog: Dialog.Component },
+		components:{ Button, VanImage, Radio, RadioGroup, Checkbox, CheckboxGroup, Overlay, Pagination, Dialog: Dialog.Component, Search },
 		filters: {
 			formatTime(time){
 
@@ -123,7 +128,7 @@
 
 			if (this.$route.query.unfinished==='1') {
 
-				this.params.status = [ 0, 1, 2 ]
+				this.params.status = []
 			}
 
 			this.$store.dispatch('setLoading',true)
@@ -152,7 +157,8 @@
 				total: 0,
 				orderInfo: '',
 				showInfo: false,
-				showConfirm: false
+				showConfirm: false,
+				orderId: ''
 			}
 		},
 		methods:{
@@ -259,6 +265,21 @@
 				}).catch(() => {
 
 				})
+			},
+			async orderSearch(){
+
+				const { data } = await API.order.getOrder({ orderId: this.orderId, shopId: this.params.shop })
+
+				if (!data.success) {
+
+					return Notify({ type: 'danger', message: data.message })
+				}
+
+				const { items, total } = data.data
+
+				this.items = items
+
+				this.total = total
 			}
 		}
 	}

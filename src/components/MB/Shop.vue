@@ -226,6 +226,77 @@
 		    	</div>
 		    </div>
 		</ActionSheet>
+		<ActionSheet v-model="showCartNoLogin" title="游客下单">
+	    	<div class="order-info">
+		    	<div class="order-base">
+		    		<p>请填写收货信息:</p>
+		    		<div class="uinfo-list">
+    					<div class="row-start-center">
+    						<Field v-model="uinfoNoLogin.name" placeholder="您的称呼" required/>
+    					</div>
+    					<br/>
+    					<div class="row-start-center">
+    						<Field v-model="uinfoNoLogin.address" placeholder="您的收货地址" required/>
+    					</div>
+    					<br/>
+    					<div class="row-start-center">
+    						<Field v-model="uinfoNoLogin.phone" placeholder="您的电话号" required/>
+    					</div>
+    					<br/>
+    					<div class="row-start-center">
+    						<Field v-model="uinfoNoLogin.wechat" placeholder="您的微信号"/>
+    					</div>
+    					<br/>
+    					<div class="row-start-center">
+    						<Field v-model="uinfoNoLogin.telegram" placeholder="您的飞机号，不需要带@" :formatter="checkTelgram"/>
+    					</div>
+		    		</div>
+		    	</div>
+		    	<div class="order-base">
+		    		<p>付款方式:</p><br/>
+	    			<RadioGroup v-model="orderInfo.payment">
+	    				<div class="row-start-center">
+	    					<div class="payment-action" v-for="(item,key) in shop.payment">
+				    			<Radio :name="item">{{ PAYMENT[item] }}</Radio>
+				    		</div>
+		    			</div>
+	    			</RadioGroup>
+		    	</div>
+		    	<div class="order-list">
+		    		<div v-for="(item,key) in orderList" :key="key">
+		    			<div class="order-item row-start-top">
+		    				<div class="order-item-pics" @click="lookPics(item.info.pics)">
+			    				<VanImage :src="item.info.pics" fit="cover" width="100px" height="60px"/>
+			    			</div>
+		    				<div class="order-item-name">
+		    					<p>{{ item.info.code }} {{ item.info.name }} * {{ item.count }}</p>
+		    					<br>
+		    					<p><b>{{ item.amount }}</b> {{ CURRENCY[shop.currency] }}</p>
+		    				</div>
+		    			</div>
+		    		</div>
+		    	</div>
+		    	<div class="order-memo">
+		    		<Field v-model="orderInfo.memo" rows="2" autosize label="客户备注" type="textarea" maxlength="150" placeholder="可备注您的要求，比如口味，忌口等" show-word-limit/>
+		    	</div>
+		    	<div class="order-base discount">
+		    		商家优惠：{{ shop.discount }}
+		    	</div>
+		    	<div class="order-base discount">
+		    		平台优惠：{{ shop.p_discount }}
+		    	</div>
+		    	<div class="order-create row-between-center">
+		    		<div class="order-amount">
+		    			<b>商品总计： {{ orderAmount }} {{ CURRENCY[shop.currency] }}</b>
+		    		</div>
+		    		<div>
+		    			<Button round type="info" size="small" :disabled="!orderAmount||orderAmount<shop.minprice" @click="createOrderNoLogin()">
+		    				生成订单
+		    			</Button>
+		    		</div>
+		    	</div>
+		    </div>
+		</ActionSheet>
 		<ShareSheet v-model="showShare" :title="shop.name" :options="options" @select="shareTo" v-if="shop._id"/>
 	</div>
 </template>
@@ -273,6 +344,14 @@ export default {
 				total: 0,
 				currency: '',
 				shopid: ''
+			},
+			showCartNoLogin: false,
+			uinfoNoLogin: {
+				name: '',
+				address: '',
+				phone: '',
+				wechat: '',
+				telegram: ''	
 			},
 			showShare: false,
 	      	options: [
@@ -445,6 +524,8 @@ export default {
 				return Notify({ type: 'danger', message: data.message })
 			}
 
+			this.orderInfo.orderId = data.orderId
+
 			Notify({ type: 'success', message: data.message })
 
 			this.createOrderText()
@@ -452,9 +533,56 @@ export default {
 			this.showCart = false
 
 		},
+		async createOrderNoLogin(){
+
+			this.orderInfo.currency = this.shop.currency
+
+			this.orderInfo.items = []
+
+			for (let i in this.orderList) {
+				
+				this.orderInfo.items.push(this.orderList[i])
+			}
+
+			this.orderInfo.total = this.orderAmount
+
+			this.orderInfo.shopid = this.shop._id
+
+			if (!this.uinfoNoLogin.name||!this.uinfoNoLogin.address||!this.uinfoNoLogin.phone) {
+
+				return Notify({ type: 'danger', message: '请选择收货信息不完善' })
+			}
+
+			if (!this.orderInfo.total) {
+
+				return Notify({ type: 'danger', message: '请选择购买的商品' })
+			}
+
+			this.orderInfo.uinfo = `称呼：${this.uinfoNoLogin.name}\n地址：${this.uinfoNoLogin.address}\n${this.uinfoNoLogin.phone?('电话：'+this.uinfoNoLogin.phone+'\n'):''}${this.uinfoNoLogin.wechat?('微信：'+this.uinfoNoLogin.wechat)+'\n':''}${this.uinfoNoLogin.telegram?('飞机：@'+this.uinfoNoLogin.telegram):''}`
+
+			const { data } = await API.order.newOrderAgency(this.orderInfo)
+
+			if (!data.success) {
+
+				return Notify({ type: 'danger', message: data.message })
+			}
+
+			this.orderInfo.orderId = data.orderId
+
+			Notify({ type: 'success', message: data.message })
+
+			this.createOrderText()
+
+			this.showCartNoLogin = false
+
+			this.orderList = {}
+
+			this.orderInfo = { uinfo: '', memo: '', payment: 0, items: [], total: 0, currency: '', shopid: ''}
+
+		},
 		async createOrderText(){
 
-			const { items, total, currency, uinfo, payment, memo } = this.orderInfo
+			const { items, total, currency, uinfo, payment, memo, orderId } = this.orderInfo
 
 			let orderText = '点单商品：\n\n'
 
@@ -475,6 +603,8 @@ export default {
 
 			orderText += `\n平台优惠：${this.shop.p_discount}\n`
 
+			orderText += `\n订单码：${orderId}\n`
+
 			copyText(orderText)
 
 			alert('订单信息复制成功！')
@@ -493,10 +623,20 @@ export default {
 
 				window.open(`https://t.me/${this.shop.telegram}`)
 
-				this.$router.push('/user/2')
+				if (this.user) {
+
+					this.$router.push('/user/2')
+				}
 			})
 		},
 		async showCartAtion(){
+
+			if (!this.user) {
+
+				this.showCartNoLogin = true
+
+				return
+			}
 
 			if (this.user) {
 				

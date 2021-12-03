@@ -2,6 +2,8 @@ const db_shop = require('../../model/schema/shop.js')
 
 const db_order = require('../../model/schema/order.js')
 
+const db_user = require('../../model/schema/user.js')
+
 module.exports = {
 
 	new_order: async (req, res, next) => {
@@ -48,9 +50,55 @@ module.exports = {
 				return res.send({ success: false, message: '存在正在处理中的订单' })
 			}
 
-			await db_order.create({ uid, shop: shopid, items, total, currency, uinfo, payment, delivery, memo })
+			const data = await db_order.create({ uid, shop: shopid, items, total, currency, uinfo, payment, delivery, memo })
 
-			return res.send({ success: true, message: '订单创建成功' })
+			return res.send({ success: true, message: '订单创建成功', orderId: data._id })
+
+		}catch(err){
+
+			return next(new Error(err))
+		}
+	},
+	new_order_agency: async (req, res, next) => {
+
+		try{
+
+			const { shopid, items, total, currency, uinfo, payment, delivery, memo } =  req.body
+
+			const agency = await db_user.findOne({ access: 'agency' })
+
+			if (!total) {
+
+				return res.send({ success: false, message: '点单费用不合法' })
+			}
+
+			if (!uinfo) {
+
+				return res.send({ success: false, message: '请选择您的收货地址' })
+			}
+
+			let total_check = 0
+
+			for (var i = items.length - 1; i >= 0; i--) {
+
+				total_check += items[i].amount
+			}
+
+			if (total_check!==total) {
+
+				return res.send({ success: false, message: '价格计算有误，请确认' })
+			}
+
+			const shop = await db_shop.findOne({ _id: shopid, pass: true, running: true, open: true })
+
+			if (!shop) {
+
+				return res.send({ success: false, message: '店铺不存在或已停止营业' })
+			}
+
+			const data = await db_order.create({ uid: agency._id, shop: shopid, items, total, currency, uinfo, payment, delivery, memo })
+
+			return res.send({ success: true, message: '订单创建成功', orderId: data._id })
 
 		}catch(err){
 
@@ -59,6 +107,20 @@ module.exports = {
 	},
 	get_order: async (req, res, next) => {
 
+		try{
+
+			const uid = req.uid
+
+			const { shopId, orderId } =  req.body			
+
+			const items = await db_order.find({ _id: orderId, shop: shopId }).populate('shop','name logo phone wechat telegram')
+
+			return res.send({ success: true, data:{ items, total: items.length }, message: '获取订单成功' })
+
+		}catch(err){
+
+			return next(new Error(err))
+		}
 	},
 	get_user_order: async (req, res, next) => {
 
