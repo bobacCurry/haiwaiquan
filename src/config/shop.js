@@ -4,10 +4,10 @@ export const SERVICETYPE = [
 	{ name: '超市', icon: '/img/home/cart.png' },
 	{ name: '服饰', icon: '/img/home/coat.png' },
 	{ name: '美妆', icon: '/img/home/cosmetics.png' },
-	{ name: '药品', icon: '/img/home/pharmacy.png' },
 	{ name: '换汇', icon: '/img/home/bank.png' },
 	{ name: '娱乐', icon: '/img/home/ktv.png' },
 	{ name: '签证机票', icon: '/img/home/passport.png' },
+	{ name: '数码电器', icon: '/img/home/electronic.png' },
 ]
 
 export const PAYMENT = [ '现金到付', '线上付款' ]
