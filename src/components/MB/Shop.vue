@@ -298,7 +298,17 @@
 		    </div>
 		</ActionSheet>
 		<ShareSheet v-model="showShare" :title="shop.name" :options="options" @select="shareTo" v-if="shop._id"/>
-		<Button id="order-info-clipboard" v-clipboard:copy="orderText" v-clipboard:success="onCopy" v-clipboard:error="onError" class="needsclick" style="width: 0"></Button>
+		<Dialog v-model="showCopy" :show-confirm-button="false">
+			<div class="clipboard-frame">
+				<div class="order-text-frame">
+					<p v-html="format(orderText)"></p>
+				</div>
+				<br/>
+				<Button id="order-info-clipboard" v-clipboard:copy="orderText" v-clipboard:success="onCopy" v-clipboard:error="onError" round  color="linear-gradient(to right, #ff6034, #ee0a24)">
+					点击复制订单内容到剪切板
+				</Button>
+			</div>
+		</Dialog>
 	</div>
 </template>
 <script>
@@ -310,7 +320,7 @@ import { SERVICETYPE, PAYMENT, DELIVERY, CURRENCY, UNIT } from '_config/shop'
 import API from '_api'
 export default {
 	name: 'Shop',
-	components:{ VanImage, Rate, Tag, Icon, Badge, Overlay, Field, Button, RadioGroup, Radio, Tab, Tabs, Review, ActionSheet, ShareSheet },
+	components:{ VanImage, Rate, Tag, Icon, Badge, Overlay, Field, Button, RadioGroup, Radio, Tab, Tabs, Review, ActionSheet, ShareSheet, Dialog: Dialog.Component },
 	async mounted(){
 
 		this.$store.dispatch('setLoading',true)
@@ -362,7 +372,8 @@ export default {
 		        { name: 'facebook', icon: '/img/share/facebook.png' },
 		        { name: 'link', icon: 'link' }
 	      	],
-	      	orderText: ''
+	      	orderText: '',
+	      	showCopy: false
 		}
 	},
 	computed:{
@@ -619,10 +630,8 @@ export default {
 
 	  //       })
 
-	  		this.$nextTick(()=>{
+	  		this.showCopy = true
 
-	  			document.getElementById('order-info-clipboard').click()
-	  		})
 		},
 		async showCartAtion(){
 
@@ -696,6 +705,8 @@ export default {
 		},
 		onCopy(){
 
+			this.showCopy = false
+
 			Dialog.alert({
 
 			  	title: '发送订单信息给商家',
@@ -717,6 +728,8 @@ export default {
 			})
 		},
 		onError(){
+
+			this.showCopy = false
 
 			Dialog.alert({
 
@@ -1005,6 +1018,14 @@ export default {
 			margin-bottom: 10px;
 		}
 		.order-create{
+		}
+	}
+	.clipboard-frame{
+		padding: 20px;
+		.order-text-frame{
+			max-height: 350px;
+			overflow: auto;
+			text-align: left;
 		}
 	}
 </style>

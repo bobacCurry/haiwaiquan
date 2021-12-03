@@ -28,6 +28,14 @@ const App = mode==='PC'?AppPC:AppMB
 
 const router = routerMode(mode)
 
+Vue.prototype.format = (val) =>{
+
+	if (val) {
+
+		return val.replace(/\n/g,'<br>')
+	}
+}
+
 new Vue({
 
 	router,
