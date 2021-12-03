@@ -113,6 +113,11 @@ module.exports = {
 
 			const { shopId, orderId } =  req.body			
 
+			if (!shopId||!orderId) {
+
+				return res.send({ success: true, data:{ items: [], total: 0 }, message: '查询ID缺失' })
+			}
+
 			const items = await db_order.find({ _id: orderId, shop: shopId }).populate('shop','name logo phone wechat telegram')
 
 			return res.send({ success: true, data:{ items, total: items.length }, message: '获取订单成功' })
