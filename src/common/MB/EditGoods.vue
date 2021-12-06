@@ -323,11 +323,6 @@
 					return Notify({ type: 'danger', message: '商品代码不得为空' })
 				}
 
-				if (!this.goodsEdit.pics.trim()) {
-
-					return Notify({ type: 'danger', message: '商品图片不得为空' })
-				}
-
 				if (!this.goodsEdit.classid.length) {
 
 					return Notify({ type: 'danger', message: '商品分类至少一个' })
@@ -346,6 +341,11 @@
 				if (!String(this.goodsEdit.unit).trim()) {
 
 					return Notify({ type: 'danger', message: '商品计价单位不得为空' })
+				}
+
+				if (!this.goodsEdit.pics.trim()) {
+
+					this.goodsEdit.pics = '/img/no-img.png'
 				}
 
 				this.goodsEdit.sort = this.goodsEdit.sort.trim()?this.goodsEdit.sort:0
@@ -395,11 +395,6 @@
 					return Notify({ type: 'danger', message: '商品代码不得为空' })
 				}
 
-				if (!this.goodsEdit.pics.trim()) {
-
-					return Notify({ type: 'danger', message: '商品图片不得为空' })
-				}
-
 				if (!this.goodsEdit.classid.length) {
 
 					return Notify({ type: 'danger', message: '商品分类至少一个' })
@@ -418,6 +413,11 @@
 				if (!String(this.goodsEdit.unit).trim()) {
 
 					return Notify({ type: 'danger', message: '商品计价单位不得为空' })
+				}
+
+				if (!this.goodsEdit.pics.trim()) {
+
+					this.goodsEdit.pics = '/img/no-img.png'
 				}
 
 				this.goodsEdit.sort = this.goodsEdit.sort.trim()?this.goodsEdit.sort:0
