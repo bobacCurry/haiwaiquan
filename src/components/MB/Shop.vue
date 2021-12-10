@@ -318,6 +318,7 @@ import { shareLink } from '@/libs/share'
 import { Image as VanImage, Rate, Tag, Icon, Badge, Overlay, Field, Button, RadioGroup, Radio, Notify, Dialog, ImagePreview, Tab, Tabs, ActionSheet, ShareSheet } from 'vant'
 import { SERVICETYPE, PAYMENT, DELIVERY, CURRENCY, UNIT } from '_config/shop'
 import API from '_api'
+let fromPage
 export default {
 	name: 'Shop',
 	components:{ VanImage, Rate, Tag, Icon, Badge, Overlay, Field, Button, RadioGroup, Radio, Tab, Tabs, Review, ActionSheet, ShareSheet, Dialog: Dialog.Component },
@@ -330,6 +331,12 @@ export default {
 		await this.isfollow()
 
 		this.$store.dispatch('setLoading',false)
+	},
+	beforeRouteEnter(to, from, next){
+
+		fromPage = from
+		
+		next()
 	},
 	data(){
 		return {
@@ -428,11 +435,20 @@ export default {
 	},
 	methods:{
 		async shareTo(option){
+
 			shareLink(option.name,window.location.href,this.shop.name,this.shop.brief)
+			
 			this.showShare = false
 		},
 		async goBack(){
+
+			if (!fromPage.name) {
+
+				return this.$router.push('/')
+			}
+
 			this.$router.go(-1)
+
 		},
 		async isfollow(){
 
