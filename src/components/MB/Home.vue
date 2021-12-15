@@ -141,6 +141,8 @@
 	@import "~/css/variable.scss";
 	.page-frame{
 		position: relative;
+		height: 100vh;
+		overflow: auto;
 		.home-banner{
 			position: absolute;
 			top: 0;
@@ -163,10 +165,8 @@
 			position: absolute;
 			top: 0;
 			left: 0;
-			width: 100%;
-			height: 100vh;
-			overflow: auto;
 			z-index: 5;
+			width: 100%;
 			.body-banner{
 				height: 20vh;
 				.banner-account{
@@ -190,7 +190,6 @@
 		}
 		.home-service-frame{
 			width: 100%;
-			overflow: auto;
 			.service-item{
 				width: 25%;
 				padding: 10px;

@@ -56,6 +56,7 @@
 	.shop-frame{
 		background: #f7f7f7;
 		text-align: left;
+		padding-bottom: 40px;
 	}
 	.shop-list-title{
 		font-size: 16px;
@@ -97,6 +98,6 @@
 		}
 	}
 	.get-more{
-		margin-top: 30px;
+		margin-top: 20px;
 	}
 </style>
