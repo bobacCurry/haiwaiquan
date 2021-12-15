@@ -8,9 +8,9 @@
 					</div>
 					<div class="input-frame">
 						<RadioGroup v-model="shop.type">
-							<div class="row-start-center shop-type flex-wrap">
-								<div>店铺类型</div>
-								<span v-for="(item,key) in SERVICETYPE" :key="key" style="margin-left: 20px;">
+							<div class="row-start-center shop-type">
+								<div style="margin-right: 20px;margin-bottom: 20px">店铺类型</div>
+								<span v-for="(item,key) in SERVICETYPE" :key="key" style="margin-right: 20px;margin-bottom: 20px">
 									<Radio :name="key+1">{{ item.name }}</Radio>
 								</span>
 							</div>
@@ -298,6 +298,7 @@
 		    	border-bottom: 1px solid #f7f7f7;
 		    	.shop-type,.checkbox-type,.pics-frame{
 		    		padding: 10px 16px;
+		    		flex-wrap: wrap;
 		    	}
 		    	.pics-frame{
 		    		.logo-frame{
