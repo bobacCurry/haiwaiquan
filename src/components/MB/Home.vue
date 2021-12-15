@@ -65,7 +65,7 @@
 				hasMore: true,
 				param: {
 					page: 1,
-					rows: 40,
+					rows: 20,
 					keywords: ''
 				},
 				items: []

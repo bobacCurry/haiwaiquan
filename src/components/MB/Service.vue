@@ -18,7 +18,7 @@
 				hasMore: true,
 				param: {
 					page: 1,
-					rows: 40,
+					rows: 20,
 					type: this.$route.params.type
 				}
 			}
