@@ -898,8 +898,8 @@ export default {
 			}
 			.shop-class-goods{
 				width: 70%;
-				height: calc(100vh - 44px);
-				overflow: auto;
+				// height: calc(100vh - 44px);
+				// overflow: auto;
 				background: $BASEBACKGROUND;
 				position: relative;
 				.shop-class-item-active{
