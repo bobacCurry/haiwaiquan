@@ -8,7 +8,7 @@
 					</div>
 					<div class="input-frame">
 						<RadioGroup v-model="shop.type">
-							<div class="row-start-center shop-type">
+							<div class="row-start-center shop-type flex-wrap">
 								<div>店铺类型</div>
 								<span v-for="(item,key) in SERVICETYPE" :key="key" style="margin-left: 20px;">
 									<Radio :name="key+1">{{ item.name }}</Radio>
