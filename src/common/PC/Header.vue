@@ -2,7 +2,7 @@
 	<div :class="['banner-header',trans?'banner-header-trans':'']">
 		<div class="banner-header-content row-between-center">
 			<div class="logo-frame row-start-center" @click="$router.push('/')">
-				<VanImage src="/img/logo.png" fit="cover" width="50" height="50"/>
+				<!-- <VanImage src="/img/logo.png" fit="cover" width="50" height="50"/> -->
 				<div class="logo-slogan">菲圈</div>
 			</div>
 			<div class="account" v-if="!user">
@@ -77,8 +77,10 @@
 			.logo-frame{
 				cursor: pointer;
 				.logo-slogan{
-					font-size: 25px;
+					font-size: 35px;
 					margin-left: 15px;
+					color: #fc6923;
+					font-weight: bold;
 				}
 			}
 			.account{

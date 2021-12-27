@@ -107,7 +107,7 @@
 					<h1>店铺照片</h1>
 					<div class="shop-pics-list row-start-center">
 						<div class="shop-pics-item" v-for="(item,key) in shop.pics" :key="key">
-							<VanImage :src="item" fit="cover" width="100%" height="100%"/>
+							<VanImage :src="item" fit="cover" width="100%" height="100%" @click="lookPics(item)"/>
 						</div>
 					</div>
 					<div class="shop-info-item row-start-top">
