@@ -150,7 +150,7 @@
 						<div>{{ key + 1 }}. </div><div class="discount-text">{{ item }}</div>
 					</div> -->
 					<div class="list row-start-top">
-						<div class="discount-text">{{ shop.discount }}</div>
+						<div class="discount-text" v-html="format(shop.discount)"/>
 					</div>
 					<div class="list" v-if="!shop.discount">
 						暂无优惠信息
