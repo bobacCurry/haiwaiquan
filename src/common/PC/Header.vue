@@ -3,7 +3,7 @@
 		<div class="banner-header-content row-between-center">
 			<div class="logo-frame row-start-center" @click="$router.push('/')">
 				<VanImage src="/img/logo.png" fit="cover" width="50" height="50"/>
-				<div class="logo-slogan">海外圈</div>
+				<div class="logo-slogan">菲圈</div>
 			</div>
 			<div class="account" v-if="!user">
 				<span><a @click="$store.dispatch('setAccount','login')">登陆</a></span> 

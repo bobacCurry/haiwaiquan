@@ -4,14 +4,14 @@
 			<div class="wrapper">
 		    	<div class="account-frame" @click.stop>
 		    		<div class="login-frame" v-if="show==='login'">
-		    			<h3>登陆海外圈</h3>
+		    			<h3>登陆菲圈</h3>
 		    			<div class="input-frame">
 			    			<Field placeholder="请输入用户名" v-model="login_account"/>
 			    		</div>
 			    		<div class="input-frame">
 			    			<Field placeholder="请输入密码" type="password" v-model="login_password"/>
 			    		</div>
-			    		<div class="text-frame">
+			    		<div class="text-frame row-between-center">
 			    			<Popover trigger="click" v-model="showForget" placement="top">
 			    				<div class="forget-frame">
 			    					重置密码请联系 <a href="https://t.me/guevaratech" target="_blank">管理员</a>
@@ -20,6 +20,9 @@
 			    					<b style="cursor: pointer;">忘记密码?</b>
 			    				</template>
 				    		</Popover>
+				    		<div class="forget-frame">
+		    					联系 <a href="https://t.me/guevaratech" target="_blank">管理员</a>
+		    				</div>
 			    		</div>
 			    		<div class="button-frame">
 			    			<Button type="primary" style="width: 100%" @click="login()">登陆</Button>
@@ -29,7 +32,7 @@
 			    		</div>
 		    		</div>
 		    		<div class="register-frame" v-if="show==='register'">
-		    			<h3>注册海外圈</h3>
+		    			<h3>注册菲圈</h3>
 		    			<div class="input-frame">
 			    			<Field placeholder="请输入用户名，数字、字母或下划线" :formatter="formatter" v-model="register_account"/>
 			    		</div>

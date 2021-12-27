@@ -9,7 +9,7 @@
 		<div class="home-body">
 			<div class="body-banner">
 				<div class="banner-account row-between-center">
-					<div class="web-logo"><b>海外圈</b></div>
+					<div class="web-logo"><b>菲圈</b></div>
 					<div class="web-account" v-if="!user">
 						<a  @click="$store.dispatch('setAccount','login')"><b>登录</b></a>
 						/

@@ -4,7 +4,7 @@
 			<div class="banner-content">
 				<Header/>
 				<div class="banner-brief">
-					海外圈，海外生活不陌生
+					菲圈，海外生活不陌生
 				</div>
 				<div class="banner-body row-center-center">
 					<div class="banner-body-content row-between-center">
