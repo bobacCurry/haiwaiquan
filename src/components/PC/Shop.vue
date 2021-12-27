@@ -113,7 +113,7 @@
 					<div class="shop-info-item row-start-top">
 						<Icon name="shop" size="22"/>
 					 	<div class="shop-info-text row-start-top">店铺介绍：</div>
-						<div style="max-width: 500px">{{shop.brief}}</div>
+						<div style="max-width: 500px" v-html="format(shop.brief)"/>
 					</div>
 					<div class="shop-info-item row-start-center">
 						<Icon name="map-marked" size="22"/>
@@ -159,9 +159,9 @@
 				<div class="shop-discount-frame">
 					<div class="title"><b>平台优惠</b></div>
 					<div class="list row-start-top">
-						<div class="discount-text">{{ shop.p_discount }}</div>
+						<div class="discount-text" v-html="format(shop.p_discount)"/>
 					</div>
-					<div class="list" v-if="!shop.discount">
+					<div class="list" v-if="!shop.p_discount">
 						暂无平台优惠信息
 					</div>
 				</div>

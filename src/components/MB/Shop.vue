@@ -91,9 +91,9 @@
 											<VanImage :src="item" fit="cover" width="100%" height="100%"/>
 										</div>
 									</div>
-									<div class="shop-info-item row-start-center">
+									<div class="shop-info-item row-start-top">
 										<Icon name="shop" size="22"/>
-									 	<div class="shop-info-text">店铺介绍：{{shop.brief}}</div>
+									 	<div class="shop-info-text">店铺介绍：<span v-html="format(shop.brief)"/></div>
 									</div>
 									<div class="shop-info-item row-start-center">
 										<Icon name="map-marked" size="22"/>
@@ -131,7 +131,7 @@
 										<div class="list" v-if="!shop.discount">
 											暂无优惠信息
 										</div>
-										<div class="discount-text">{{ shop.discount }}</div>
+										<div class="discount-text" v-html="format(shop.discount)"/>
 									</div>
 								</div>
 								<div class="shop-info-zone">
@@ -140,7 +140,7 @@
 										<div class="list" v-if="!shop.p_discount">
 											暂无优惠信息
 										</div>
-										<div class="discount-text">{{ shop.p_discount }}</div>
+										<div class="discount-text" v-html="format(shop.p_discount)"/>
 									</div>
 								</div>
 					  		</div>
