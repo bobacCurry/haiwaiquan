@@ -92,6 +92,9 @@
 					<div class="order-info-item">
 						<p>订单状态：<b style="color: red">{{ ORDERSTATUS[orderInfo.status] }}</b></p>
 					</div>
+					<div class="order-info-item">
+						<Button class="action-button" type="info" @click="copyOrderInfo(orderInfo)">复制订单信息</Button>
+					</div>
 				</div>
 			</div>
 		</Overlay>
@@ -112,7 +115,7 @@
 	import { PAYMENT, DELIVERY, CURRENCY } from '_config/shop'
 	import { ORDERSTATUS } from '_config/order'
 	import API from '_api'
-	import { formatTime } from '@/libs/util'
+	import { formatTime, copyText } from '@/libs/util'
 	export default {
 		name: 'ShopOrders',
 		components:{ Button, VanImage, Radio, RadioGroup, Checkbox, CheckboxGroup, Overlay, Pagination, Dialog: Dialog.Component, Search },
@@ -280,6 +283,36 @@
 				this.items = items
 
 				this.total = total
+			},
+			async copyOrderInfo(orderInfo){
+
+				const { items, total, currency, uinfo, payment, memo, _id, shop } = orderInfo
+
+				let orderText = '点单商品：\n\n'
+
+				for (var i = 0; i < items.length; i++) {
+					
+					orderText += `${i+1}：${items[i].info.code}*${items[i].count}(${items[i].info.name}) ${items[i].amount}\n`
+				}
+
+				orderText += `\n总计：${total} ${this.CURRENCY[currency]}\n`
+
+				orderText += `\n付款方式：${this.PAYMENT[payment]}\n`
+
+				orderText += `\n联系方式：\n\n${uinfo}\n`
+
+				orderText += `\n备注：${memo}\n`
+
+				orderText += `\n商家优惠：${shop.discount}\n`
+
+				orderText += `\n平台优惠：${shop.p_discount}\n`
+
+				orderText += `\n订单码：${_id}\n`
+
+				copyText(orderText)
+
+				alert('订单信息复制成功！')
+
 			}
 		}
 	}

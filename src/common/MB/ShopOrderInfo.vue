@@ -2,7 +2,7 @@
 	<div class="block-frame">
 		<div class="user-order-frame">
 			<div class="order-status-list">
-				<CheckboxGroup v-model="params.status" @change="getUserOrder()">
+				<CheckboxGroup v-model="params.status" @change="getShopOrder()">
 					<div class="status-list row-start-center">
 						<span v-for="(item,key) in ORDERSTATUS" :key="key" style="margin: 5px">
 							<Checkbox :name="key" shape="square">{{item}}</Checkbox>
@@ -40,7 +40,7 @@
 						<Button class="order-action" type="danger" size="mini" v-if="[0,1].indexOf(item.status)!==-1" @click="cancelOrderShop(item._id)">取消订单</Button>
 					</div>
 				</div>
-				<Pagination v-model="params.page" :items-per-page="params.rows" :total-items="total" @change="getUserOrder()"/>
+				<Pagination v-model="params.page" :items-per-page="params.rows" :total-items="total" @change="getShopOrder()"/>
 			</div>
 		</div>
 		<ActionSheet v-model="showInfo" title="订单详情">
@@ -83,6 +83,9 @@
 				<div class="order-info-item">
 					<p>订单状态：<b style="color: red">{{ ORDERSTATUS[orderInfo.status] }}</b></p>
 				</div>
+				<div class="order-info-item">
+					<Button class="order-action" type="info" @click="copyOrderInfo(orderInfo)">复制订单信息</Button>
+				</div>
 			</div>
 		</ActionSheet>
 		<Dialog v-model="showConfirm" title="确认接受该订单吗？" @confirm="confirmOrder()" show-cancel-button>
@@ -102,7 +105,7 @@
 	import { PAYMENT, DELIVERY, CURRENCY } from '_config/shop'
 	import { ORDERSTATUS } from '_config/order'
 	import API from '_api'
-	import { formatTime } from '@/libs/util'
+	import { formatTime, copyText } from '@/libs/util'
 	export default {
 		name: 'ShopOrders',
 		components:{ Button, VanImage, Radio, RadioGroup, Checkbox, CheckboxGroup, Overlay, Pagination, Dialog: Dialog.Component, ActionSheet },
@@ -254,6 +257,36 @@
 				}).catch(() => {
 
 				})
+			},
+			async copyOrderInfo(orderInfo){
+
+				const { items, total, currency, uinfo, payment, memo, _id, shop } = orderInfo
+
+				let orderText = '点单商品：\n\n'
+
+				for (var i = 0; i < items.length; i++) {
+					
+					orderText += `${i+1}：${items[i].info.code}*${items[i].count}(${items[i].info.name}) ${items[i].amount}\n`
+				}
+
+				orderText += `\n总计：${total} ${this.CURRENCY[currency]}\n`
+
+				orderText += `\n付款方式：${this.PAYMENT[payment]}\n`
+
+				orderText += `\n联系方式：\n\n${uinfo}\n`
+
+				orderText += `\n备注：${memo}\n`
+
+				orderText += `\n商家优惠：${shop.discount}\n`
+
+				orderText += `\n平台优惠：${shop.p_discount}\n`
+
+				orderText += `\n订单码：${_id}\n`
+
+				copyText(orderText)
+
+				alert('订单信息复制成功！')
+
 			}
 		}
 	}
